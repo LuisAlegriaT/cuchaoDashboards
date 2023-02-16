@@ -16,7 +16,7 @@ app.secret_key='mysecretkey'
 
 @app.route('/')
 def login():
-    return render_template('adminClandAx.html')
+    return render_template('adminClandAux.html')
 
 #Arrancamos servidor
 if __name__ == '__main__':

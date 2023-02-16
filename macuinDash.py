@@ -18,6 +18,7 @@ app.secret_key='mysecretkey'
 def login():
     return render_template('adminClandAux.html')
 
+
 @app.route('/adminDepartamentos')
 def AdminDepa():
     return render_template('adminDepartamentos.html')

@@ -1,0 +1,47 @@
+{%extends 'plantilla.html'%}
+{%block body%}
+<div class="container">
+
+    <div class="display-5 text-dark text-center mt-5 mb-5"> Actualizar los Departamentos </div>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card text-center">
+                    
+                        <form class="row g-3 col-12">
+                            <div class="card-body">
+                                <label for="staticEmail2" class="form-label">Nombre</label>
+                                <input type="text"  class="form-control" id="staticEmail2" value="Compras">
+                            </div>
+                        
+                            <div class="card-footer text-muted">
+                                <a href="/adminDepartamentos" class="btn btn-warning">Actualizar</a>
+                                <a href="/adminDepartamentos" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+</div>
+{%endblock%}

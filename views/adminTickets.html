@@ -1,0 +1,80 @@
+{%extends 'plantilla.html'%}
+{%block body%}
+<div class="container">
+
+    <div class="display-5 text-dark text-center mt-5 mb-5"> Administrador de Tickets </div>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        TICKETS
+                    </div>
+                    <div class="card-body">
+                        <a href="/adminComentario" class="btn btn-info">Asignar</a>
+                        <a href="/adminComentario"class="btn btn-primary">Comentario</a>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        TICKETS
+                    </div>
+                    <div class="card-body">
+                        <a href="/" class="btn btn-info">Asignar</a>
+                        <a href="/EliminarDepartamentos" class="btn btn-primary">Comentario</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        TICKETS
+                    </div>
+                    <div class="card-body">
+                        <a href="/" class="btn btn-info">Asignar</a>
+                        <a href="/EliminarDepartamentos" class="btn btn-primary">Comentario</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        TICKETS
+                    </div>
+                    <div class="card-body">
+                        <a href="/" class="btn btn-info">Asignar</a>
+                        <a href="/EliminarDepartamentos" class="btn btn-primary">Comentario</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+
+
+
+
+
+
+</div>
+{%endblock%}

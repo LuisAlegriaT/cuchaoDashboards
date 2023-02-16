@@ -18,6 +18,37 @@ app.secret_key='mysecretkey'
 def login():
     return render_template('adminClandAux.html')
 
+
+@app.route('/adminDepartamentos')
+def AdminDepa():
+    return render_template('adminDepartamentos.html')
+
+@app.route('/CrearDepartamentos')
+def CrearDepa():
+    return render_template('CrearDep.html')
+
+@app.route('/ActualizarDepartamentos')
+def ActualizarDepa():
+    return render_template('ActualizarDep.html')
+
+@app.route('/EliminarDepartamentos')
+def EliminarDepa():
+    return render_template('EliminarDep.html')
+
+@app.route('/adminTickets')
+def AdminTickets():
+    return render_template('adminTickets.html')
+
+@app.route('/adminComentario')
+def AdminComentario():
+    return render_template('adminComentario.html')
+
+@app.route('/ComentarioCliente')
+def ComentarioCliente():
+    return render_template('ComentarioCliente.html')
+
+
+
 #Arrancamos servidor
 if __name__ == '__main__':
     app.run(port=3000,debug= True)

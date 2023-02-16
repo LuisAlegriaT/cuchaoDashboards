@@ -1,0 +1,127 @@
+{%extends 'plantilla.html'%}
+{%block body%}
+<div class="container">
+
+    <div class="display-5 text-dark text-center mt-5 mb-5"> Administrador de Departamentos </div>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        DEPARTAMENTO
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Compras</h5>
+                        <p class="card-text">Empresa Macuin Dashboards</p>
+                        
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="/ActualizarDepartamentos" class="btn btn-warning">Actualizar</a>
+                        <a href="/EliminarDepartamentos"class="btn btn-danger">Eliminar</a>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        DEPARTAMENTO
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Contabilidad</h5>
+                        <p class="card-text">Empresa Macuin Dashboards</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="#" class="btn btn-warning">Actualizar</a>
+                        <a href="#" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        DEPARTAMENTO
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Logística</h5>
+                        <p class="card-text">Empresa Macuin Dashboards</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="#" class="btn btn-warning">Actualizar</a>
+                        <a href="#" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        DEPARTAMENTO
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Producción</h5>
+                        <p class="card-text">Empresa Macuin Dashboards</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="#" class="btn btn-warning">Actualizar</a>
+                        <a href="#" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        DEPARTAMENTO
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Ventas</h5>
+                        <p class="card-text">Empresa Macuin Dashboards</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="#" class="btn btn-warning">Actualizar</a>
+                        <a href="#" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        DEPARTAMENTO
+                    </div>
+                    <div class="card-body">
+                        <a href="/CrearDepartamentos" class="btn btn-success">Crear</a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+</div>
+{%endblock%}

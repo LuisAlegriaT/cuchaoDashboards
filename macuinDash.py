@@ -48,6 +48,15 @@ def ComentarioCliente():
     return render_template('ComentarioCliente.html')
 
 
+@app.route('/ComentarioAuxiliar')
+def ComentarioAuxiliar():
+    return render_template('ComentarioAuxiliar.html')
+
+@app.route('/adminAsignar')
+def adminAsignar():
+    return render_template('adminAsignar.html')
+
+
 
 #Arrancamos servidor
 if __name__ == '__main__':

@@ -21,19 +21,29 @@
 
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
                        COMENTARIO A CLIENTE
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Cliente</h5>
-                        <input type="text" class="form-control" id="staticEmail2">
-                        <p class="card-text">Comentario</p>
-                        <input type="text" class="form-control" id="staticEmail2">
                     
-                    </div>
-                    <div class="card-footer text-muted">
-                        <a href="/adminComentario" class="btn btn-warning">Enviar</a>
-                        <a href="/adminComentario" class="btn btn-danger">Cancelar</a>
+                    <div class="card-body">
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label for="inputEmail4" class="form-label">Cliente</label>
+                                <input type="text" class="form-control" id="inputEmail4">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputPassword4" class="form-label">Comentario</label>
+                                <input type="text" class="form-control" id="inputPassword4">
+                            </div>
+                            
+                            
+                            <div class="col-12">
+                                <a href="/adminComentario" type="submit" class="btn " style="color: black; background-color: #F4D03F;">Enviar</a>
+                                <a href="/adminComentario" type="submit" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+                                
+                            </div>
+                        </form>
+                        
                     </div>
                     
                 </div>

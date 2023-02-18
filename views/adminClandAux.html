@@ -2,7 +2,7 @@
 {%block body%}
 <div class="container">
 
-    <div class="display-2 text-primary text-center mt-5 mb-5"> Administrador de Albums </div>
+    <div class="display-2 text-primary text-center mt-5 mb-5"> Bienvenido a Macuin Dashboards </div>
     {%with mensaje = get_flashed_messages() %}
     {%if mensaje%}
     {%for msj in mensaje%}
@@ -14,5 +14,70 @@
     {%endfor%}
     {%endif%}
     {%endwith%}
-</div>
+
+    <div>
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+            <a href="/CrearClientesAux" class="btn btn-outline-success">Nuevo</a>
+          </form>
+    </div><br>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                        JUANITO GONZALEZ
+                    </div>
+                    <div class="card-body">
+                        <label class="card-title">AUXILIAR DE SOPORTE</label>
+                        <label class="card-text">juanito.gonzalez@macuindash.com</label>
+                        <label for="">Tel. 4422101616</label>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="#" class="btn btn-danger">Actualizar</a>
+                        <a href="#" class="btn btn-warning">Eliminar</a>
+                      </div> 
+                </div>
+            </div>
+            
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                        DIANA ROMERO
+                    </div>
+                    <div class="card-body">
+                        <label class="card-title">PRODUCCION</label>
+                        <label class="card-text">diana.romero@macuindash.com</label>
+                        <label for="">Tel. 4424874968</label>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="#" class="btn btn-danger">Actualizar</a>
+                        <a href="#" class="btn btn-warning">Eliminar</a>
+                      </div> 
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                        LUIS ALEGRIA
+                    </div>
+                    <div class="card-body">
+                        <label class="card-title">LOGISTICA</label>
+                        <label class="card-text">luis.alegria@macuindash.com</label>
+                        <label for="">Tel. 7291204626</label>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="#" class="btn btn-danger">Actualizar</a>
+                        <a href="#" class="btn btn-warning">Eliminar</a>
+                      </div> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 {%endblock%}

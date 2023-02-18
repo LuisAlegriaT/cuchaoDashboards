@@ -56,6 +56,14 @@ def ComentarioAuxiliar():
 def adminAsignar():
     return render_template('adminAsignar.html')
 
+@app.route('/crearPersonal')
+def crearPersonal():
+    return render_template('crearPersonal.html')
+
+@app.route('/actualizarPersonal')
+def actualizarPersonal():
+    return render_template('actualizarPersonal.html')
+
 
 
 #Arrancamos servidor

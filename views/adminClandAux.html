@@ -25,20 +25,20 @@
 
     <div class="container">
         <div class="row">
-
+            {%for usu in usuario%}
             <div class="col">
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        JUANITO GONZALEZ
+                        {{usu.1}}
                     </div>
                     <div class="card-body">
-                        <label class="card-title">AUXILIAR DE SOPORTE</label>
-                        <label class="card-text">juanito.gonzalez@macuindash.com</label>
-                        <label for="">Tel. 4422101616</label>
+                        <label class="card-title">{{usu.6}}</label>
+                        <label class="card-text">{{usu.3}}</label>
+                        <label for="">{{usu.7}}</label>
                     </div>
                     <div class="card-footer text-muted">
-                        <a href="/actualizarPersonal" class="btn btn-danger">Actualizar</a>
-                        <a href="/eliminarPersonal" class="btn btn-warning">Eliminar</a>
+                        <a href="/actualizarPersonal/ {{usu.0}}" class="btn btn-danger">Actualizar</a>
+                        <a href="/eliminarPersonal/ {{usu.0}}" class="btn btn-warning">Eliminar</a>
                       </div> 
                 </div>
             </div>

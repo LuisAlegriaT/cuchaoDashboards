@@ -3,20 +3,24 @@ from colorama import Cursor
 from flask import Flask, render_template, request ,redirect,url_for,flash 
 from flask_mysqldb import MySQL
 
+
 #inicializar variable usar flask
-app= Flask(__name__, template_folder='views')
+app= Flask(__name__, template_folder='views', render_template='views' )
 
 #configuracion de la conexion 
 app.config['MYSQL_HOST']= 'localhost'
 app.config['MYSQL_USER']= 'root'
 app.config['MYSQL_PASSWORD']= ''
-app.config['MYSQL_DB']= 'BDMacuin'
+app.config['MYSQL_DB']= 'macuindb'
 mysql= MySQL(app)
 app.secret_key='mysecretkey'
 
 @app.route('/')
-def login():
-    return render_template('adminClandAux.html')
+def adminClandAux():
+    cursor=mysql.connection.cursor()
+    cursor.execute('select *from users')
+    consulta = cursor.fetchall()
+    return render_template('adminClandAux.html', usuario=consulta)
 
 
 @app.route('/adminDepartamentos')

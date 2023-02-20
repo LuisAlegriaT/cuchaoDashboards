@@ -15,50 +15,48 @@
    
 </head>
 <body>
-    
-        <div class="collapse " id="navbarToggleExternalContent">
-            <div class=" p-4 " style="color: white; background-color: #4852EF ;">
-                
-                    <div class="container-fluid flex-column ">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
-                            aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <a class="navbar-brand" href="/">MACUIN DASHBOARDS</a>
-                        
-                        
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/">Administrar Personal</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/adminDepartamentos">Administrar Departamentos</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/adminTickets">Administrar Tickets</a>
-                                </li>
-                            </ul>
-                            
-                            <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
-                                <button class="btn btn-outline-success" type="submit">Buscar</button>
-                            </form>
-                        
-                    </div>
-                
-            </div>
-        </div>
-    
-    <nav class="navbar navbar-dark " style="color: black; background-color: #4852EF;">
+    <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+          <a class="navbar-brand" href="{{url_for('adminClandAux')}}">Macuin Dashboards</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">¿A donde vamos?</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{{url_for('AdminDepa')}}">Departamentos</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{url_for('adminClandAux')}}">Personal</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Acciones
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark">
+                    <li><a class="dropdown-item" href="#">Cerrar Sesion</a></li>
+                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  </ul>
+                </li>
+              </ul>
+              <form class="d-flex mt-3" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-success" type="submit">Search</button>
+              </form>
+            </div>
+          </div>
         </div>
-    </nav>
+      </nav>
+      <br><br>
     {%block body%}
 
     {%endblock%}

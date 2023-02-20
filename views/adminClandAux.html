@@ -19,7 +19,7 @@
         <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
-            <a href="/crearPersonal" class="btn btn-outline-success">Nuevo</a>
+            <a href="/loginCrear" class="btn btn-outline-success">Nuevo</a>
           </form>
     </div><br>
 
@@ -32,8 +32,8 @@
                         {{usu.1}}
                     </div>
                     <div class="card-body">
-                        <label class="card-title">{{usu.6}}</label>
-                        <label class="card-text">{{usu.3}}</label>
+                        <label class="card-title">{{usu.9}}</label><br>
+                        <label class="card-text">{{usu.2}}</label><br>
                         <label for="">{{usu.7}}</label>
                     </div>
                     <div class="card-footer text-muted">
@@ -41,41 +41,10 @@
                         <a href="/eliminarPersonal/ {{usu.0}}" class="btn btn-warning">Eliminar</a>
                       </div> 
                 </div>
-            </div>
+                <br>
+            </div> 
+            {%endfor%}
             
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        DIANA ROMERO
-                    </div>
-                    <div class="card-body">
-                        <label class="card-title">PRODUCCION</label>
-                        <label class="card-text">diana.romero@macuindash.com</label>
-                        <label for="">Tel. 4424874968</label>
-                    </div>
-                    <div class="card-footer text-muted">
-                        <a href="#" class="btn btn-danger">Actualizar</a>
-                        <a href="#" class="btn btn-warning">Eliminar</a>
-                      </div> 
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        LUIS ALEGRIA
-                    </div>
-                    <div class="card-body">
-                        <label class="card-title">LOGISTICA</label>
-                        <label class="card-text">luis.alegria@macuindash.com</label>
-                        <label for="">Tel. 7291204626</label>
-                    </div>
-                    <div class="card-footer text-muted">
-                        <a href="#" class="btn btn-danger">Actualizar</a>
-                        <a href="#" class="btn btn-warning">Eliminar</a>
-                      </div> 
-                </div>
-            </div>
 
         </div>
     </div>

@@ -89,11 +89,24 @@ def eliminarPersonal(id):
 #Departamentos 
 @app.route('/adminDepartamentos')
 def AdminDepa():
-    return render_template('adminDepartamentos.html')
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT * FROM departamento')
+    consulta = cursor.fetchall()
+    return render_template('adminDepartamentos.html', departamento=consulta)
 
 @app.route('/CrearDepartamentos')
 def CrearDepa():
     return render_template('CrearDep.html')
+
+@app.route('/insertDepas', methods=['POST'])
+def insertarD():
+    if request.method == ('POST'):
+        depaName = request.form['nombreDepa']
+        print(depaName)
+        cur=mysql.connection.cursor()
+        cur.execute('INSERT INTO departamento(nombre_departamento)values($s)',(depaName))
+        mysql.connection.commit()
+        return 'Insertar Depas'
 
 
 

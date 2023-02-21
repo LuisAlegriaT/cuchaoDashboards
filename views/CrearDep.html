@@ -20,14 +20,14 @@
             <div class="col">
                 <div class="card text-center">
                     
-                        <form class="row g-3 col-12">
+                        <form action="/insertDepas" method="POST" class="row g-3 col-12">
                             <div class="card-body">
-                                <label for="staticEmail2" class="form-label">Nombre</label>
-                                <input type="text"  class="form-control" id="staticEmail2" >
+                                <label class="form-label">Nombre</label>
+                                <input type="text"  class="form-control" name="nombreDepa" >
                             </div>
                         
                             <div class="card-footer text-muted">
-                                <a href="/adminDepartamentos" class="btn btn-warning">Guardar</a>
+                                <button type="submit" class="btn btn-success">Guardar</button>
                                 <a href="/adminDepartamentos" class="btn btn-danger">Cancelar</a>
                             </div>
                         </form>
@@ -35,8 +35,6 @@
             </div>
         </div>
     </div>
-
-
 
 
 

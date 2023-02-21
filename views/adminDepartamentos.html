@@ -23,100 +23,31 @@
           </form>
     </div><br>
 
+
+
     <div class="container">
         <div class="row">
-
+            {%for depa in departamento%}
             <div class="col">
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        COMPRAS
+                        {{depa.1}}
                     </div>
                     <div class="card-body">
-                        <a href="/ActualizarDepartamentos" class="btn btn-warning">Actualizar</a>
-                        <a href="/EliminarDepartamentos" class="btn btn-danger">Eliminar</a>
-                        
+                        <label class="card-title">{{depa.0}}</label><br>
                     </div>
-                    
-                    
+                    <div class="card-footer text-muted">
+                        <a href="/ActualizarDepartamentos/{{depa.0}}" class="btn btn-danger">Actualizar</a><br><br>
+                        <a href="/eliminarPersonal/{{depa}}/{{depa.0}}" class="btn btn-warning">Eliminar</a>
+                      </div> 
                 </div>
-            </div>
+                <br>
+            </div> 
+            {%endfor%}
             
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        CONTABILIDAD
-                    </div>
-                    <div class="card-body">
-                        <a href="/ActualizarDepartamentos" class="btn btn-warning">Actualizar</a>
-                        <a href="/EliminarDepartamentos" class="btn btn-danger">Eliminar</a>
-                    
-                    </div>
-                </div>
-            </div>
 
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        LOGISTICA
-                    </div>
-                    
-                    <div class="card-body">
-                        <a href="/ActualizarDepartamentos" class="btn btn-warning">Actualizar</a>
-                        <a href="/EliminarDepartamentos" class="btn btn-danger">Eliminar</a>
-                    
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-    <br>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        PRODUCCIÓN
-                    </div>
-                    
-                    <div class="card-body">
-                        <a href="/ActualizarDepartamentos" class="btn btn-warning">Actualizar</a>
-                        <a href="/EliminarDepartamentos" class="btn btn-danger">Eliminar</a>
-                    
-                    </div>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        VENTAS
-                    </div>
-                    
-                    <div class="card-body">
-                        <a href="/ActualizarDepartamentos" class="btn btn-warning">Actualizar</a>
-                        <a href="/EliminarDepartamentos" class="btn btn-danger">Eliminar</a>
-                    
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        NUEVO
-                    </div>
-                    <div class="card-body">
-                        <a href="/CrearDepartamentos" class="btn btn-success">Crear</a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
 
 
 

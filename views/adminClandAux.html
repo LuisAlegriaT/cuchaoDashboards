@@ -5,12 +5,16 @@
     <div class="display-2 text-primary text-center mt-5 mb-5"> Bienvenido a Macuin Dashboards </div>
     {%with mensaje = get_flashed_messages() %}
     {%if mensaje%}
-    {%for msj in mensaje%}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>{{ msj }}</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
+    <ul class=flashes>
+        {%for msj in mensaje%}
+    
+        <div class="alert alert-warning alert-dismissible mb-3" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ msj }}
+        </div>
+    
+    </ul>
+    
     {%endfor%}
     {%endif%}
     {%endwith%}
@@ -37,8 +41,8 @@
                         <label for="">{{usu.7}}</label>
                     </div>
                     <div class="card-footer text-muted">
-                        <a href="/actualizarPersonal/ {{usu.0}}" class="btn btn-danger">Actualizar</a>
-                        <a href="/eliminarPersonal/ {{usu.0}}" class="btn btn-warning">Eliminar</a>
+                        <a href="/editarPersonal/{{usu.0}}" class="btn btn-danger">Actualizar</a>
+                        <a href="/eliminarPersonal/{{usu.0}}" class="btn btn-warning">Eliminar</a>
                       </div> 
                 </div>
                 <br>

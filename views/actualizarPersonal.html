@@ -15,45 +15,54 @@
     {%endif%}
     {%endwith%}
 
-   
+  <form action="/actualizarPersonal/{{personal.0}}" method="POST">
+
     <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="E-MAIL" aria-label="Recipient's username" aria-describedby="basic-addon2">
-        <span class="input-group-text" id="basic-addon2">@macuindash.com</span>
+      <span class="input-group-text" id="basic-addon3">Nombre</span>
+      <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.1}}">
+    </div>
+
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="txtmail" placeholder="E-MAIL" aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{personal.2}}">
+        <span class="input-group-text" id="basic-addon2" >@macuindash.com</span>
       </div>
       
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Domicilio</span>
-        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+        <input type="text" class="form-control" name="txtdomicilio" id="basic-url" value="{{personal.5}}" aria-describedby="basic-addon3">
       </div>
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Departamento</span>
-        <select name="" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-            <option value="">LOGISTICA</option>
-            <option value="">VENTAS</option>
-            <option value="">ADMINISTRADOR</option>
-            <option value="">AUXILIAR</option>
+        <select name="txtdepartamento" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.9}}">
+          
+          {%for usu in usuario%}
+          <option value="{{usu.0}}">{{usu.1}}</option>
+          {%endfor%}
         </select>
+        
 
         <span class="input-group-text" id="basic-addon3"> Telefono</span>
-        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="TELEFONO 442 202 1040">
+        <input type="text" class="form-control" name="txttelefono" id="basic-url" aria-describedby="basic-addon3" value="{{personal.7}}">
       </div>
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">TIPO</span>
-        <select name="" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-            <option value="">ADMIN</option>
-            <option value="">AUXILIAR</option>
-            <option value="">CLIENTE</option>
+        <select name="txttipo" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.4}}">
+            <option value="ADMIN">ADMIN</option>
+            <option value="AUXILIAR">AUXILIAR</option>
+            <option value="CLIENTE">CLIENTE</option>
+
         </select>
       </div>
       
       <div class="input-group">
         <div class="card-footer text-muted">
-            <a href="#" class="btn btn-warning">ACTUALIZAR</a>
-            <a href="/" class="btn btn-danger">CANCELAR</a>
+            <button  class="btn btn-warning">ACTUALIZAR</button>
+            
           </div> 
       </div>
+  </form>
 </div>
 {%endblock%}

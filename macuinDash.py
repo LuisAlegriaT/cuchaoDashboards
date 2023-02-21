@@ -30,7 +30,7 @@ def loginCrear():
     consulta = cursor.fetchall()
     return render_template('crearPersonal.html', usuario=consulta)
 
-@app.route('/crearPersonal', methods =['POST'])
+@app.route('/crearPersonal',methods =['POST'])
 def crearPersonal():
     if request.method == 'POST':
         vnombre= request.form['txtnombre']
@@ -49,9 +49,41 @@ def crearPersonal():
     flash('Album almacenado en la BD')
     return redirect(url_for('adminClandAux')) 
 
-@app.route('/actualizarPersonal')
-def actualizarPersonal():
-    return render_template('actualizarPersonal.html')
+@app.route('/editarPersonal/<string:id>')
+def editarPersonal(id):
+    cursor= mysql.connection.cursor()
+    cursor.execute('SELECT * FROM users JOIN departamento ON (users.departamento_id = departamento.id_departamento) where id={0}'.format(id))
+    consulta= cursor.fetchall()
+    cursor1=mysql.connection.cursor()
+    cursor1.execute('SELECT * FROM departamento')
+    consulta1 = cursor1.fetchall()
+    return render_template('actualizarPersonal.html', personal= consulta[0], usuario =consulta1 )
+
+@app.route('/actualizarPersonal/<string:id>',methods =['POST'])
+def actualizarPersonal(id):
+    if request.method=='POST':
+        vnombre= request.form['txtnombre']
+        vmail= request.form['txtmail']
+        vdomicilio= request.form['txtdomicilio']
+        vdepartamento= request.form['txtdepartamento']
+        vtelefono= request.form['txttelefono']
+        vtipo= request.form['txttipo']
+
+        cursor=mysql.connection.cursor()
+        cursor.execute('update users set nombre=%s ,mail=%s ,tipo=%s, domicilio=%s, departamento_id=%s ,telefono=%s where id=%s',(vnombre,vmail,vtipo, vdomicilio, vdepartamento,vtelefono,id))
+        mysql.connection.commit()
+
+    flash('Album se actualizo en la BD')
+    return redirect(url_for('adminClandAux'))
+
+
+@app.route('/eliminarPersonal/<string:id>')
+def eliminarPersonal(id):
+    cursor= mysql.connection.cursor()
+    cursor.execute('delete from users where id = %s', [id])
+    mysql.connection.commit()
+    flash('Personal Eliminado de la base de datos')
+    return redirect(url_for('adminClandAux'))
 
 
 #Departamentos 
@@ -62,6 +94,8 @@ def AdminDepa():
 @app.route('/CrearDepartamentos')
 def CrearDepa():
     return render_template('CrearDep.html')
+
+
 
 @app.route('/ActualizarDepartamentos')
 def ActualizarDepa():

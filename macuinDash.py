@@ -15,7 +15,7 @@ app.config['MYSQL_DB']= 'macuindb'
 mysql= MySQL(app)
 app.secret_key='mysecretkey'
 
-#Cliente y Auxiliares
+###############################################################################Cliente y Auxiliares###############################################################
 @app.route('/')
 def adminClandAux():
     cursor=mysql.connection.cursor()
@@ -86,7 +86,8 @@ def eliminarPersonal(id):
     return redirect(url_for('adminClandAux'))
 
 
-#Departamentos 
+################################################################Departamentos###########################################################################################
+            #CONSULTAR
 @app.route('/adminDepartamentos')
 def AdminDepa():
     cursor=mysql.connection.cursor()
@@ -94,6 +95,8 @@ def AdminDepa():
     consulta = cursor.fetchall()
     return render_template('adminDepartamentos.html', departamento=consulta)
 
+
+            #INSERTAR
 @app.route('/CrearDepartamentos')
 def CrearDepa():
     return render_template('CrearDep.html')
@@ -104,21 +107,47 @@ def insertarD():
         depaName = request.form['nombreDepa']
         print(depaName)
         cur=mysql.connection.cursor()
-        cur.execute('INSERT INTO departamento(nombre_departamento)values($s)',(depaName))
+        cur.execute('INSERT INTO departamento(nombre_departamento)values(%s)',[depaName])
         mysql.connection.commit()
-        return 'Insertar Depas'
+        flash('Departamento Agregado')
+        return redirect(url_for('AdminDepa'))
 
 
+            #ACTUALIZAR
 
-@app.route('/ActualizarDepartamentos')
-def ActualizarDepa():
-    return render_template('ActualizarDep.html')
+@app.route('/ActualizarDepartamentos/<id_departamento>')
+def ActualizarDepa(id_departamento):
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT * FROM departamento WHERE id_departamento = %s',[id_departamento])
+    data=cur.fetchall()
+    print(data)
+    return render_template('ActualizarDep.html',departamento=data[0])
 
-@app.route('/EliminarDepartamentos')
-def EliminarDepa():
-    return render_template('EliminarDep.html')
+@app.route('/updateDepartamento/<id_departamento>', methods=['POST'])
+def updateDepartamento(id_departamento, methods=['POST']):
+    if request.method == 'POST':
+        depaName= request.form['nombreDepa']
+        cur=mysql.connection.cursor()
+        cur.execute("""
+            UPDATE departamento SET 
+                nombre_departamento=%s
+            WHERE id_departamento=%s
+        """,(depaName,id_departamento))
+        flash('Departamento Actualizado!')
+        return redirect(url_for('AdminDepa'))
 
-#Tickets
+        #ELIMINAR 
+
+
+@app.route('/EliminarDepartamentos/<string:id_departamento>')
+def EliminarDepa(id_departamento):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM departamento WHERE id_departamento =  {0}'.format(id_departamento))
+    mysql.connection.commit()
+    flash('Departamento Eliminado')
+    return redirect(url_for('AdminDepa'))
+
+################################################################Tickets########################################################
 @app.route('/adminTickets')
 def AdminTickets():
     return render_template('adminTickets.html')

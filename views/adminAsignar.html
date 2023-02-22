@@ -24,26 +24,26 @@
                     </div>
                     <div class="card-body">
                         <form class="row g-3">
-                            
-                            <div class="col-md-4">
                                 <label for="inputState" class="form-label">Departamentos</label>
-                                <select id="inputState" class="form-select">
-                                    <option selected>Elige uno...</option>
-                                    <option>Compras</option>
-                                    <option>Contabilidad</option>
-                                    <option>Logistica</option>
-                                </select>
-                            </div>
+                                    <select id="inputState" class="form-select" >
+                                        
+                                        <option selected>Elige uno...</option>
+                                        {%for aux in auxiliar%}
+                                            <option>{{aux.9}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </div>
 
-                            <div class="col-md-4">
-                                <label for="inputState" class="form-label">Auxiliares</label>
-                                <select id="inputState" class="form-select">
-                                    <option selected>Elige uno...</option>
-                                    <option>Luis Eduardo</option>
-                                    <option>Christian </option>
-                                    <option>Paloma</option>
-                                </select>
-                            </div>
+                                <div class="col-md-4">
+                                    <label for="inputState" class="form-label">Auxiliares</label>
+                                    <select id="inputState" class="form-select">
+                                        <option selected>Elige uno...</option>
+                                        {%for aux in auxiliar%}
+                                            <option>{{aux.1}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </div>
+                            
                             
                            
                             <div class="col-12">

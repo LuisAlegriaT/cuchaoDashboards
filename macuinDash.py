@@ -124,21 +124,22 @@ def ActualizarDepa(id_departamento):
     return render_template('ActualizarDep.html',departamento=data[0])
 
 @app.route('/updateDepartamento/<id_departamento>', methods=['POST'])
-def updateDepartamento(id_departamento, methods=['POST']):
+def updateDepartamento(id_departamento):
     if request.method == 'POST':
         depaName= request.form['nombreDepa']
+        print(depaName)
+        print(id_departamento)
         cur=mysql.connection.cursor()
         cur.execute("""
             UPDATE departamento SET 
-                nombre_departamento=%s
-            WHERE id_departamento=%s
+                nombre_departamento = %s
+            WHERE id_departamento = %s
         """,(depaName,id_departamento))
+        mysql.connection.commit()
         flash('Departamento Actualizado!')
         return redirect(url_for('AdminDepa'))
 
         #ELIMINAR 
-
-
 @app.route('/EliminarDepartamentos/<string:id_departamento>')
 def EliminarDepa(id_departamento):
     cur = mysql.connection.cursor()

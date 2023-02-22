@@ -154,7 +154,7 @@ def AdminTickets():
     return render_template('adminTickets.html')
 
 @app.route('/adminComentario')
-def AdminComentario():
+def AdminComentario():    
     return render_template('adminComentario.html')
 
 @app.route('/ComentarioCliente')
@@ -168,7 +168,10 @@ def ComentarioAuxiliar():
 
 @app.route('/adminAsignar')
 def adminAsignar():
-    return render_template('adminAsignar.html')
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT * FROM users JOIN departamento ON (users.departamento_id = departamento.id_departamento) WHERE tipo = "AUXILIAR" ')
+    consulta = cursor.fetchall()
+    return render_template('adminAsignar.html', auxiliar=consulta)
 
 #Arrancamos servidor
 if __name__ == '__main__':

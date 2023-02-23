@@ -151,11 +151,18 @@ def EliminarDepa(id_departamento):
 ################################################################Tickets########################################################
 @app.route('/adminTickets')
 def AdminTickets():
-    return render_template('adminTickets.html')
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT id_ticket, fecha, detalle,estatus, clasificacion, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id)')
+    consulta = cursor.fetchall()
+    return render_template('adminTickets.html', ticket=consulta)
 
-@app.route('/adminComentario')
-def AdminComentario():    
-    return render_template('adminComentario.html')
+@app.route('/adminComentario/<id_ticket>')
+def AdminComentario(id_ticket):    
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT id_ticket, comentariosCliente, comentariosAux, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id)')
+    consulta = cursor.fetchall()
+    return render_template('adminComentario.html', comentario=consulta)
+
 
 @app.route('/ComentarioCliente')
 def ComentarioCliente():

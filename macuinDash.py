@@ -170,23 +170,25 @@ def ComentarioCliente():
 
 @app.route('/ComentarioAuxiliar/<ticket>',methods=['POST'])
 def ComentarioAuxiliar(ticket):
+    ticket=ticket
     cur= mysql.connection.cursor()
-    cur.execute('SELECT nombre FROM users INNER JOIN ticketaux ON users.id = ticketaux.userAux_id INNER JOIN ticket ON ticketaux.ticket_idAux = ticket.id_ticket WHERE ticket.id_ticket=%s',[ticket])
+    cur.execute('SELECT nombre FROM users INNER JOIN ticketaux ON users.id = ticketaux.userAux_id INNER JOIN ticket ON ticketaux.ticket_idAux = ticket.id_ticket WHERE ticket.id_ticket = %s',[ticket])
     data=cur.fetchall()
-    print(data)
-    return render_template('ComentarioAuxiliar.html', ticket1=data)
+    print(ticket)
+    return render_template('ComentarioAuxiliar.html', ticket1=data,ticket=ticket)
 
 
-@app.route('/inssertComentario/ticket',methods=['POST'])
+@app.route('/inssertComentario/<ticket>',methods=['POST'])
 def insertComentario(ticket):
   if request.method=='POST':
         #ticket_id=ticket  
         comentarioA= request.form['txtComentarioA'] 
         print(ticket)
+        print(comentarioA)
         cursor=mysql.connection.cursor()
         cursor.execute('UPDATE ticket SET comentariosAux = %s WHERE id_ticket = %s',(comentarioA, ticket))
-        consulta = cursor.fetchall()
-        return redirect(url_for('AdminComentario'))
+        mysql.connection.commit()
+        return redirect(url_for('AdminTickets'))
 
 @app.route('/adminAsignar')
 def adminAsignar():

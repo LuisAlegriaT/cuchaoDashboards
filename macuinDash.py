@@ -152,7 +152,7 @@ def EliminarDepa(id_departamento):
 @app.route('/adminTickets')
 def AdminTickets():
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT id_ticket, fecha, detalle,estatus, clasificacion, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id)')
+    cursor.execute('SELECT id_ticket, fecha, detalle,estatus, clasificacion, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id) ')
     consulta = cursor.fetchall()
     return render_template('adminTickets.html', ticket=consulta)
 

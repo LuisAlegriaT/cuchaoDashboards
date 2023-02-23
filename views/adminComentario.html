@@ -25,7 +25,9 @@
                     </div>
                     
                     <div class="card-body" >
-                        <a href="/ComentarioCliente" class="btn " style="color: black; background-color:#C39BD3;"  >Cliente</a>
+                        <form action="/ComentarioCliente/{{ticket.0}}" method="POST">
+                            <button type="submit" class="btn " style="color: black; background-color:#C39BD3;">Cliente</button>
+                        </form>
                         
                         <form action="/ComentarioAuxiliar/{{ticket.0}}" method="POST">
                             <button type="submit" class="btn " style="color: black; background-color:#C39BD3;">Auxiliar</button>

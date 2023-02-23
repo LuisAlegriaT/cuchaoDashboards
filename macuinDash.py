@@ -163,11 +163,7 @@ def AdminComentario(id_ticket):
     return render_template('adminComentario.html', ticket=id_t)
 
 
-@app.route('/ComentarioCliente')
-def ComentarioCliente():
-    return render_template('ComentarioCliente.html')
-
-
+    #COMENTARIO PARA AUXILIAR
 @app.route('/ComentarioAuxiliar/<ticket>',methods=['POST'])
 def ComentarioAuxiliar(ticket):
     ticket=ticket
@@ -176,7 +172,6 @@ def ComentarioAuxiliar(ticket):
     data=cur.fetchall()
     print(ticket)
     return render_template('ComentarioAuxiliar.html', ticket1=data,ticket=ticket)
-
 
 @app.route('/inssertComentario/<ticket>',methods=['POST'])
 def insertComentario(ticket):
@@ -190,12 +185,38 @@ def insertComentario(ticket):
         mysql.connection.commit()
         return redirect(url_for('AdminTickets'))
 
+        #COMENTARIO CLIENTE
+@app.route('/ComentarioCliente/<ticket>',methods=['POST'])
+def ComentarioCliente(ticket):
+    ticket=ticket
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT nombre FROM users INNER JOIN ticketaux ON users.id = ticketaux.userAux_id INNER JOIN ticket ON ticketaux.ticket_idAux = ticket.id_ticket WHERE ticket.id_ticket = %s',[ticket])
+    data=cur.fetchall()
+    print(ticket)
+    return render_template('ComentarioCliente.html', ticket1=data,ticket=ticket)
+
+@app.route('/insertComentarioC/<ticket>',methods=['POST'])
+def insertComentarioC(ticket):
+  if request.method=='POST':
+        #ticket_id=ticket  
+        comentarioC= request.form['txtComentarioC'] 
+        print(ticket)
+        print(comentarioC)
+        cursor=mysql.connection.cursor()
+        cursor.execute('UPDATE ticket SET comentariosCliente = %s WHERE id_ticket = %s',(comentarioC, ticket))
+        mysql.connection.commit()
+        return redirect(url_for('AdminTickets'))
+
+
+        #ASIGNAR AUXILIAR
+
 @app.route('/adminAsignar')
 def adminAsignar():
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM users JOIN departamento ON (users.departamento_id = departamento.id_departamento) WHERE tipo = "AUXILIAR" ')
     consulta = cursor.fetchall()
     return render_template('adminAsignar.html', auxiliar=consulta)
+
 
 #Arrancamos servidor
 if __name__ == '__main__':

@@ -26,21 +26,23 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="row g-3">
+                        {%for ticket in ticket1%}
+                        <form class="row g-3" action="/inssertComentario/{{ticket}}" method="POST">
                             <div class="col-md-6">
                                 <label for="inputEmail4" class="form-label">Auxiliar</label>
-                                <input type="text" class="form-control" id="inputEmail4">
+                                <label type="text" class="form-control" id="inputEmail4" >{{ticket.0}}</label>
                             </div>
                             <div class="col-md-6">
-                                <label for="inputPassword4" class="form-label">Comentario</label>
-                                <input type="text" class="form-control" id="inputPassword4">
+                                <label for="inputPassword4" class="form-label" >Comentario</label>
+                                <input type="text" class="form-control" id="inputPassword4" name="txtComentarioA">
                             </div>
+                            {%endfor%}
 
 
                             <div class="col-12">
                                 <a href="/adminComentario" type="submit" class="btn "
                                     style="color: black; background-color: #F4D03F;">Enviar</a>
-                                <a href="/adminComentario" type="submit" class="btn "
+                                <a href="/adminComentario" class="btn "
                                     style="color: black; background-color: #CD6155;">Cancelar</a>
 
                             </div>

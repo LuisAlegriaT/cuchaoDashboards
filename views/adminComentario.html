@@ -18,6 +18,7 @@
         <div class="row">
 
             <div class="col">
+
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: #4D64A4;">
                        COMENTARIOS
@@ -26,7 +27,9 @@
                     <div class="card-body" >
                         <a href="/ComentarioCliente" class="btn " style="color: black; background-color:#C39BD3;"  >Cliente</a>
                         
-                        <a href="/ComentarioAuxiliar"class="btn " style="color: black; background-color:#C39BD3;">Auxiliar</a>
+                        <form action="/ComentarioAuxiliar/{{ticket.0}}" method="POST">
+                            <button type="submit" class="btn " style="color: black; background-color:#C39BD3;">Auxiliar</button>
+                        </form>
                         
                     </div>
                     

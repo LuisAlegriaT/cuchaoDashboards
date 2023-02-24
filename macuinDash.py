@@ -213,10 +213,13 @@ def insertComentarioC(ticket):
 @app.route('/adminAsignar/<id_ticket>')
 def adminAsignar(id_ticket):
     ticketRecived=id_ticket
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT users.nombre, (SELECT COUNT(ticketaux.userAux_id) FROM ticketaux WHERE users.id = ticketaux.userAux_id) AS tickets_Auxiliar FROM users WHERE users.tipo="AUXILIAR"')
+    consultaAux=cur.fetchall()
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM users WHERE tipo = "AUXILIAR" ')
     consulta = cursor.fetchall()
-    return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived)
+    return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived,ticketsAux=consultaAux)
 
 @app.route('/asignarTicket/<ticketSend>', methods=['POST'])
 def asignarTicket(ticketSend):

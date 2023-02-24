@@ -4,8 +4,14 @@ from flask import Flask, render_template, request ,redirect,url_for,flash
 from flask_mysqldb import MySQL
 
 
+
 #inicializar variable usar flask
 app= Flask(__name__, template_folder='views')
+
+#iniciar el Depurador Automaticamente
+
+
+
 
 #configuracion de la conexion 
 app.config['MYSQL_HOST']= 'localhost'
@@ -15,8 +21,21 @@ app.config['MYSQL_DB']= 'macuindb'
 mysql= MySQL(app)
 app.secret_key='mysecretkey'
 
+
+
 ###############################################################################Cliente y Auxiliares###############################################################
+
 @app.route('/')
+def Login():
+    return render_template('Login.html')
+
+
+
+
+
+
+#Cliente y Auxiliares
+@app.route('/adminClandAux')
 def adminClandAux():
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM users JOIN departamento WHERE (users.departamento_id = departamento.id_departamento)')

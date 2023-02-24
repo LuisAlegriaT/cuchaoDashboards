@@ -22,36 +22,24 @@
                     <div class="card-header">
                        ASIGNAR TRABAJO
                     </div>
-                    <div class="card-body">
-                        <form class="row g-3">
-                            
-                            <div class="col-md-4">
-                                <label for="inputState" class="form-label">Departamentos</label>
-                                <select id="inputState" class="form-select">
-                                    <option selected>Elige uno...</option>
-                                    <option>Compras</option>
-                                    <option>Contabilidad</option>
-                                    <option>Logistica</option>
-                                </select>
-                            </div>
 
-                            <div class="col-md-4">
-                                <label for="inputState" class="form-label">Auxiliares</label>
-                                <select id="inputState" class="form-select">
-                                    <option selected>Elige uno...</option>
-                                    <option>Luis Eduardo</option>
-                                    <option>Christian </option>
-                                    <option>Paloma</option>
-                                </select>
-                            </div>
+                    <div class="card-body">
+                        <form class="row g-3" action="/asignarTicket/{{ticketSend}}" method="POST">
+                                <div class="col-md-4">
+                                    <label for="inputState" class="form-label">Auxiliares</label>
+                                    <select id="inputState" class="form-select" name="txtAuxiliar" >
+                                        <option selected disabled>Elige uno...</option>
+                                        {%for aux in auxiliar%}
+                                            <option value="{{aux.0}}">{{aux.1}}</option>
+                                        {%endfor%}
+                                    </select>
+                                </div>
                             
-                           
                             <div class="col-12">
-                                <a type="submit" href="/adminTickets" class="btn btn-primary">Asignar</a>
+                                <button type="submit" class="btn btn-primary">Asignar</button>
                                 <a type="submit" href="/adminTickets" class="btn btn-primary">Regresar</a>
                             </div>
                         </form>
-                    
                     </div>
                     
                     
@@ -62,46 +50,26 @@
         </div>
     </div>
     <br>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header bg-warning">
-                        Luis Eduardo
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title ">5 tickets</h5>
-                    </div>
-            
-                </div>
-            </div>
 
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header text-dark" style="color:green; background-color: #52BE80;">
-                        Christian
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">2 tickets</h5>
-                       
-                    </div>
-                </div>
-            </div>
+    {%for infoAux in ticketsAux%}
+        <div class="container">
+            <div class="row">
 
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header bg-danger">
-                        Paloma
+                <div class="col">
+                    <div class="card text-center">
+                        <div class="card-header bg-success">
+                            {{infoAux.0}}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title ">{{infoAux.1}} tickets</h5>
+                        </div>
+                
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">8 tickets</h5>
-                        
-                    </div>
-            
                 </div>
+
             </div>
         </div>
-    </div>
+    {%endfor%}
         
     
 

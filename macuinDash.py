@@ -22,7 +22,9 @@ mysql= MySQL(app)
 app.secret_key='mysecretkey'
 
 
-#Login
+
+###############################################################################Cliente y Auxiliares###############################################################
+
 @app.route('/')
 def Login():
     return render_template('Login.html')
@@ -103,7 +105,8 @@ def eliminarPersonal(id):
     return redirect(url_for('adminClandAux'))
 
 
-#Departamentos 
+################################################################Departamentos###########################################################################################
+            #CONSULTAR
 @app.route('/adminDepartamentos')
 def AdminDepa():
     cursor=mysql.connection.cursor()
@@ -111,6 +114,8 @@ def AdminDepa():
     consulta = cursor.fetchall()
     return render_template('adminDepartamentos.html', departamento=consulta)
 
+
+            #INSERTAR
 @app.route('/CrearDepartamentos')
 def CrearDepa():
     return render_template('CrearDep.html')
@@ -121,41 +126,132 @@ def insertarD():
         depaName = request.form['nombreDepa']
         print(depaName)
         cur=mysql.connection.cursor()
-        cur.execute('INSERT INTO departamento(nombre_departamento)values($s)',(depaName))
+        cur.execute('INSERT INTO departamento(nombre_departamento)values(%s)',[depaName])
         mysql.connection.commit()
-        return 'Insertar Depas'
+        flash('Departamento Agregado')
+        return redirect(url_for('AdminDepa'))
 
 
+            #ACTUALIZAR
 
-@app.route('/ActualizarDepartamentos')
-def ActualizarDepa():
-    return render_template('ActualizarDep.html')
+@app.route('/ActualizarDepartamentos/<id_departamento>')
+def ActualizarDepa(id_departamento):
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT * FROM departamento WHERE id_departamento = %s',[id_departamento])
+    data=cur.fetchall()
+    print(data)
+    return render_template('ActualizarDep.html',departamento=data[0])
 
-@app.route('/EliminarDepartamentos')
-def EliminarDepa():
-    return render_template('EliminarDep.html')
+@app.route('/updateDepartamento/<id_departamento>', methods=['POST'])
+def updateDepartamento(id_departamento):
+    if request.method == 'POST':
+        depaName= request.form['nombreDepa']
+        print(depaName)
+        print(id_departamento)
+        cur=mysql.connection.cursor()
+        cur.execute("""
+            UPDATE departamento SET 
+                nombre_departamento = %s
+            WHERE id_departamento = %s
+        """,(depaName,id_departamento))
+        mysql.connection.commit()
+        flash('Departamento Actualizado!')
+        return redirect(url_for('AdminDepa'))
 
-#Tickets
+        #ELIMINAR 
+@app.route('/EliminarDepartamentos/<string:id_departamento>')
+def EliminarDepa(id_departamento):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM departamento WHERE id_departamento =  {0}'.format(id_departamento))
+    mysql.connection.commit()
+    flash('Departamento Eliminado')
+    return redirect(url_for('AdminDepa'))
+
+################################################################Tickets########################################################
 @app.route('/adminTickets')
 def AdminTickets():
-    return render_template('adminTickets.html')
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT id_ticket, fecha, detalle,estatus, clasificacion, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id) ')
+    consulta = cursor.fetchall()
+    return render_template('adminTickets.html', ticket=consulta)
 
-@app.route('/adminComentario')
-def AdminComentario():
-    return render_template('adminComentario.html')
-
-@app.route('/ComentarioCliente')
-def ComentarioCliente():
-    return render_template('ComentarioCliente.html')
+@app.route('/adminComentario/<id_ticket>')
+def AdminComentario(id_ticket): 
+    id_t=id_ticket   
+    print(id_t)
+    return render_template('adminComentario.html', ticket=id_t)
 
 
-@app.route('/ComentarioAuxiliar')
-def ComentarioAuxiliar():
-    return render_template('ComentarioAuxiliar.html')
+    #COMENTARIO PARA AUXILIAR
+@app.route('/ComentarioAuxiliar/<ticket>',methods=['POST'])
+def ComentarioAuxiliar(ticket):
+    ticket=ticket
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT nombre FROM users INNER JOIN ticketaux ON users.id = ticketaux.userAux_id INNER JOIN ticket ON ticketaux.ticket_idAux = ticket.id_ticket WHERE ticket.id_ticket = %s',[ticket])
+    data=cur.fetchall()
+    print(ticket)
+    return render_template('ComentarioAuxiliar.html', ticket1=data,ticket=ticket)
 
-@app.route('/adminAsignar')
-def adminAsignar():
-    return render_template('adminAsignar.html')
+@app.route('/inssertComentario/<ticket>',methods=['POST'])
+def insertComentario(ticket):
+  if request.method=='POST':
+        #ticket_id=ticket  
+        comentarioA= request.form['txtComentarioA'] 
+        print(ticket)
+        print(comentarioA)
+        cursor=mysql.connection.cursor()
+        cursor.execute('UPDATE ticket SET comentariosAux = %s WHERE id_ticket = %s',(comentarioA, ticket))
+        mysql.connection.commit()
+        return redirect(url_for('AdminTickets'))
+
+        #COMENTARIO CLIENTE
+@app.route('/ComentarioCliente/<ticket>',methods=['POST'])
+def ComentarioCliente(ticket):
+    ticket=ticket
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT nombre from users INNER JOIN ticket ON ticket.user_idCliente = users.id where ticket.id_ticket=%s',[ticket])
+    data=cur.fetchall()
+    print(ticket)
+    return render_template('ComentarioCliente.html', ticket1=data,ticket=ticket)
+
+@app.route('/insertComentarioC/<ticket>',methods=['POST'])
+def insertComentarioC(ticket):
+  if request.method=='POST':
+        #ticket_id=ticket  
+        comentarioC= request.form['txtComentarioC'] 
+        print(ticket)
+        print(comentarioC)
+        cursor=mysql.connection.cursor()
+        cursor.execute('UPDATE ticket SET comentariosCliente = %s WHERE id_ticket = %s',(comentarioC, ticket))
+        mysql.connection.commit()
+        return redirect(url_for('AdminTickets'))
+
+
+        #ASIGNAR AUXILIAR
+
+@app.route('/adminAsignar/<id_ticket>')
+def adminAsignar(id_ticket):
+    ticketRecived=id_ticket
+    cur=mysql.connection.cursor()
+    cur.execute('SELECT users.nombre, (SELECT COUNT(ticketaux.userAux_id) FROM ticketaux WHERE users.id = ticketaux.userAux_id) AS tickets_Auxiliar FROM users WHERE users.tipo="AUXILIAR"')
+    consultaAux=cur.fetchall()
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT * FROM users WHERE tipo = "AUXILIAR" ')
+    consulta = cursor.fetchall()
+    return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived,ticketsAux=consultaAux)
+
+@app.route('/asignarTicket/<ticketSend>', methods=['POST'])
+def asignarTicket(ticketSend):
+    if request.method=='POST':
+        print(ticketSend)
+        auxiliar=request.form['txtAuxiliar']
+        print(auxiliar)
+        cursor=mysql.connection.cursor()
+        cursor.execute('INSERT INTO ticketaux (ticket_idAux, userAux_id) VALUES (%s, %s)',(ticketSend, auxiliar))
+        mysql.connection.commit()
+        return redirect(url_for('AdminTickets'))
+
+
 
 #Arrancamos servidor
 if __name__ == '__main__':

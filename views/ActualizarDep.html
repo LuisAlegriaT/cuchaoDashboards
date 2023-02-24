@@ -21,19 +21,18 @@
             
                 <div class="card ">
                     
-                        <form class="row g-3 text-center mt-2 mb-3  " >
-                            
-                            <div class="col-12  ">
-                                
-                                <label for="inputEmail4" class="form-label ">Nombre</label>
-                                <input type="text" class="form-control " id="inputEmail4">
-                            </div>
-                        
-                            <div class="col-12">
-                                <a href="/adminDepartamentos" class="btn btn-warning">Actualizar</a>
-                                <a href="/adminDepartamentos" class="btn btn-danger">Cancelar</a>
-                            </div>
-                        </form>
+                    <form action="/updateDepartamento/{{departamento.0}}" method="POST" class="row g-3 col-12">
+                        <div class="card-body">
+                            <label class="form-label">Nombre</label>
+                            <input type="text"  class="form-control" name="nombreDepa" value="{{departamento.1}}" >
+                        </div>
+                    
+                        <div class="card-footer text-muted">
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <a href="/adminDepartamentos" class="btn btn-danger">Cancelar</a>
+                        </div>
+                    </form>
+
                     </div>
                 </div>
             

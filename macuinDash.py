@@ -210,12 +210,25 @@ def insertComentarioC(ticket):
 
         #ASIGNAR AUXILIAR
 
-@app.route('/adminAsignar')
-def adminAsignar():
+@app.route('/adminAsignar/<id_ticket>')
+def adminAsignar(id_ticket):
+    ticketRecived=id_ticket
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users JOIN departamento ON (users.departamento_id = departamento.id_departamento) WHERE tipo = "AUXILIAR" ')
+    cursor.execute('SELECT * FROM users WHERE tipo = "AUXILIAR" ')
     consulta = cursor.fetchall()
-    return render_template('adminAsignar.html', auxiliar=consulta)
+    return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived)
+
+@app.route('/asignarTicket/<ticketSend>', methods=['POST'])
+def asignarTicket(ticketSend):
+    if request.method=='POST':
+        print(ticketSend)
+        auxiliar=request.form['txtAuxiliar']
+        print(auxiliar)
+        cursor=mysql.connection.cursor()
+        cursor.execute('INSERT INTO ticketaux (ticket_idAux, userAux_id) VALUES (%s, %s)',(ticketSend, auxiliar))
+        mysql.connection.commit()
+        return redirect(url_for('AdminTickets'))
+
 
 
 #Arrancamos servidor

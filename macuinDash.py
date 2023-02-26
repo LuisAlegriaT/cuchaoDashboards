@@ -250,6 +250,17 @@ def asignarTicket(ticketSend):
         cursor.execute('INSERT INTO ticketaux (ticket_idAux, userAux_id) VALUES (%s, %s)',(ticketSend, auxiliar))
         mysql.connection.commit()
         return redirect(url_for('AdminTickets'))
+    
+    #REPORTE
+@app.route('/Reportes')
+def Reportes():
+    return render_template('adminReporte.html')
+
+
+################################## PERFIL AUXILIAR #################################################
+@app.route('/MiPerfil')
+def miPerfil():
+    return render_template('miPerfil.html')
 
 
 

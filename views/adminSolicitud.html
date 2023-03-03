@@ -1,0 +1,86 @@
+{%extends 'plantillaCliente.html'%}
+{%block body%}
+<div class="container">
+
+    <div class="display-5 text-dark text-center mt-5 mb-5"> MIS SOLICITUDES </div>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+    <div>
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+           
+            <a href="/crearSolicitud" class="btn btn-outline-success">Nuevo</a>
+          </form>
+    </div><br>
+
+
+
+    <div class="container">
+        <div class="row">
+           
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: green;">
+                        <label for="inputEmail4" class="form-label">02/03/23</label>
+                    </div>
+                    <div class="card-body">
+                        <label for="inputEmail4" class="form-label">FALLA DE IMPRESORA</label>
+                        
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+                <br>
+            </div> 
+            
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: grey;">
+                        <label for="inputEmail4" class="form-label">03/03/23</label>
+                    </div>
+                    <div class="card-body">
+                        <label for="inputEmail4" class="form-label">FALLA DE ENVIÓ DE DATOS</label>
+            
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+                <br>
+            </div>
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: rgb(255, 115, 63);">
+                        <label for="inputEmail4" class="form-label">12/02/23</label>
+                    </div>
+                    <div class="card-body">
+                        <label for="inputEmail4" class="form-label">FALLA DE ENVIÓ DE DATOS</label>
+            
+                    </div>
+                    <div class="card-footer text-muted">
+                        <a href="" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+                <br>
+            </div>
+            
+
+        </div>
+    </div>
+
+
+
+</div>
+{%endblock%}

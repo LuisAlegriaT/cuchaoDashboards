@@ -264,6 +264,24 @@ def miPerfil():
 
 
 
+
+################################## CLIENTE #############################################3
+@app.route('/perfilCliente')
+def perfilCliente():
+    return render_template('perfilCliente.html')
+
+
+@app.route('/adminSolicitud')
+def adminSolicitud():
+    return render_template('adminSolicitud.html')
+
+@app.route('/crearSolicitud')
+def crearSolicitud():
+    return render_template('crearSolicitud.html')
+
+
+
+
 #Arrancamos servidor
 if __name__ == '__main__':
     app.run(port=3000,debug= True)

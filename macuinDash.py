@@ -1,16 +1,20 @@
 #importar el framework 
 from colorama import Cursor
-from flask import Flask, render_template, request ,redirect,url_for,flash 
+from flask import Flask, render_template, request ,redirect,url_for,flash, session
 from flask_mysqldb import MySQL
+from flask_session import Session
 
 
 
-#inicializar variable usar flask
+#inicializar el Framework
 app= Flask(__name__, template_folder='views')
 
 #iniciar el Depurador Automaticamente
 
-
+# Flask sessions
+app.config["SESSION_PERMANENT"] = True
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 
 #configuracion de la conexion 
@@ -18,18 +22,83 @@ app.config['MYSQL_HOST']= 'localhost'
 app.config['MYSQL_USER']= 'root'
 app.config['MYSQL_PASSWORD']= ''
 app.config['MYSQL_DB']= 'macuindb'
+
 mysql= MySQL(app)
 app.secret_key='mysecretkey'
 
 
+#------- Configuraciones Roles de Usuaio-----#
 
-###############################################################################Cliente y Auxiliares###############################################################
+class user():
+    def __init__(self,status,nombre,password)->None:
+        self.status = status
+        self.nombre = nombre
+        self.password = password
 
+class user1():
+    def __init__(self,idmed, nombre, rol)->None:
+        self.idmed = idmed
+        self.nombre = nombre
+        self.rol = rol
+
+
+
+
+#/////////////////RUTAS////////////////#
+
+
+#--------Ruta General--------#
 @app.route('/')
-def Login():
-    return render_template('Login.html')
+def log():
+    return render_template('login.html')
 
 
+#--------Login--------#
+@app.route('/login', methods=["POST"])
+def login():
+    if request.method == 'POST':
+        usuario = request.form['txtuser']
+        pas = request.form['txtpassword']
+        cursor = mysql.connection.cursor()
+        cursor.execute('SELECT status, nombre, password FROM users where nombre = %s and password = %s',(usuario,pas))
+        
+        mysql.connection.commit()
+        account = cursor.fetchone()
+        
+        if account:
+            session['id'] = account[0] # status
+            session['usuario'] = account[1] # usuario
+            session['pas'] = account[2] # contraseña
+            print(account[0],account[1],account[2])
+            #-----------Administradores
+            if(account[0] == 1 and account[1] == usuario and account[2] == pas):
+                return render_template('adminClandAux.html') # vista Admin
+              
+            #-----------Auxiliares
+            
+            if(account[0] == 2 and account[1] == usuario and account[2] == pas):
+                return render_template('index.html') # Vista Auxiliar
+          
+            #-----------Clientes
+            if(account[0] == 3 and account[1] == usuario and account[2] == pas):
+                return render_template('adminDepartamentos.html') # vista clientes
+                              
+        else:
+            flash('Datos incorrectos')
+            return render_template('login.html')
+        
+        
+@app.route('/Admin/<string:id>')
+def Admin(id):
+    if session['id'] == None:
+        return render_template('login.html')
+    else:
+        return render_template('adminTickets.html', user = user)  
+
+@app.route('/logout')
+def logout():
+    session['id']=None
+    return render_template('login.html')  
 
 
 
@@ -61,7 +130,7 @@ def crearPersonal():
         print(vnombre,vmail,vdomicilio,vdepartamento,vtelefono,vtipo)
 
         cursor=mysql.connection.cursor()
-        cursor.execute('insert into users(nombre ,mail ,tipo, domicilio, departamento_id ,telefono)values (%s,%s,%s,%s,%s,%s)', 
+        cursor.execute('insert into users(nombre ,mail ,status, domicilio, departamento_id ,telefono)values (%s,%s,%s,%s,%s,%s)', 
         (vnombre,vmail,vtipo, vdomicilio, vdepartamento,vtelefono)) #%s son para las cadenas
         mysql.connection.commit()
     

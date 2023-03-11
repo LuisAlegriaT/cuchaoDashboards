@@ -1,0 +1,123 @@
+{%extends 'plantilla.html'%}
+{%block body%}
+<div class="container">
+
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+    <br>
+    <div class="container">
+        <div class="row">
+    
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                       REPORTES DE TICKETS
+                    </div>
+                    <div class="card-body">
+                        <form class="row g-3">
+                            
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon3">Tickets</span>
+                                <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                <button class="btn btn-outline-primary" type="submit">Search</button>
+                            
+                                <span class="input-group-text" id="basic-addon3">Auxiliares</span>
+                                <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                <button class="btn btn-outline-primary" type="submit">Search</button>
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon3">Departamentos</span>
+                                <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                <button class="btn btn-outline-primary" type="submit">Search</button>
+
+                                <span class="input-group-text" id="basic-addon3">Fecha</span>
+                                <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                <button class="btn btn-outline-primary" type="submit">Search</button>
+                            </div>
+                            
+
+                            <div class="btn-group-sm col-md-2" role="group" aria-label="Basic mixed styles example">
+                            <button class="btn btn-outline-success" type="submit">Generar</button> 
+                            <button class="btn btn-outline-danger" type="submit">Regresar</button>
+                            </div>
+                        </form>
+
+                        
+                    </div>
+    
+                    
+    
+                    
+    
+                </div>
+            </div> 
+    
+        </div>
+        <br>
+        <div class="row card">
+            <div class="col">
+                <table class="table">
+                    <thead class="table" style="color: white; background-color: #4D64A4;">
+                        <tr>
+                            <th scope="col">CLIENTE</th>
+                            <th scope="col">DETALLES</th>
+                            <th scope="col">ESTATUS</th>
+                            <th scope="col">TICKETS</th>
+                            <th scope="col">DEPARTAMENTOS</th>
+                            <th scope="col">AUXILIARES</th>
+                            <th scope="col">FECHA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Luis</td>
+                            <td>Falla de impresora</td>
+                            <td>En proceso</td>
+                            <td>2</td>
+                            <td>Logistica</td>
+                            <td>Paloma</td>
+                            <td>23/02/23</td>
+                        </tr>
+                        <tr>
+                            <td>Paloma</td>
+                            <td>Falla de red</td>
+                            <td>En proceso</td>
+                            <td>5</td>
+                            <td>Produccion</td>
+                            <td>Luis</td>
+                            <td>25/02/23</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+        </div>
+    </div>
+    <br>
+    <div class="btn-group-sm col-md-2" role="group" aria-label="Basic mixed styles example">
+        <button class="btn btn-outline-warning" type="submit">Reporte en PDF</button>
+    </div>
+    
+
+   
+    
+    
+
+
+
+
+
+
+
+</div>
+{%endblock%}

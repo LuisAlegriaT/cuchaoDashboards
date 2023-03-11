@@ -1,0 +1,62 @@
+{%extends 'plantillaAuxiliares.html'%}
+{%block body%}
+<div class="container">
+    <div>
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+    </div><br>
+
+    <div class="container">
+        <div class="row">
+            <!--{%for tick in ticket%}-->
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                        TICKETS
+                    </div>
+                    
+                    <div class="card-body">
+                        <form action="/crearPersonal" method="POST">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon3">Fecha</span>
+                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                            </div>
+                        
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Detalle</span>
+                                <label type="text" name="txtmail" class="form-control"  placeholder="E-MAIL"
+                                    aria-label="Recipient's username" aria-describedby="basic-addon2">Falla Impresora
+                            </div>
+                            
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Estatus</span>
+                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">En proceso
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Clasificacion</span>
+                                <label type="text" name="txtmail" class="form-control" placeholder="E-MAIL" aria-label="Recipient's username"
+                                    aria-describedby="basic-addon2">Falla Técnica
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Cliente</span>
+                                <label type="text" name="txtmail" class="form-control" placeholder="E-MAIL" aria-label="Recipient's username"
+                                    aria-describedby="basic-addon2"> Ailec Fernanda Garcia Zamora
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="card-body" style="color: white; background-color: #EEEEEE;">
+                        <a href="/adminAsignar/{{tick.0}}" class="btn" style="color: white; background-color: #17A589;">Asignar</a>
+                        <a href="/adminComentario/{{tick.0}}" class="btn" style="color: white; background-color: #F5B041;">Comentario</a>
+                    </div>
+                </div>
+            </div>
+            <!--{%endfor%}-->
+        </div>
+    </div>
+</div>
+{%endblock%}

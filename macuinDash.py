@@ -258,9 +258,13 @@ def Reportes():
 
 
 ################################## PERFIL AUXILIAR #################################################
-@app.route('/MiPerfil')
+@app.route('/perfilAuxiliar')
 def miPerfil():
-    return render_template('miPerfil.html')
+    return render_template('perfilAuxiliar.html')
+
+@app.route('/misTickets')
+def misTickets():
+ return render_template('/misTickets.html')
 
 
 

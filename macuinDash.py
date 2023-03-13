@@ -60,32 +60,32 @@ def login():
         usuario = request.form['txtuser']
         pas = request.form['txtpassword']
         cursor = mysql.connection.cursor()
-        cursor.execute('SELECT status, nombre, password FROM users where nombre = %s and password = %s',(usuario,pas))
+        cursor.execute('SELECT tipo, nombre, pass FROM users where nombre = %s and pass = %s',(usuario,pas))
         
         mysql.connection.commit()
         account = cursor.fetchone()
         
         if account:
-            session['id'] = account[0] # status
+            session['id'] = account[0] # tipo
             session['usuario'] = account[1] # usuario
             session['pas'] = account[2] # contraseña
             print(account[0],account[1],account[2])
             #-----------Administradores
             if(account[0] == 1 and account[1] == usuario and account[2] == pas):
-                return render_template('adminClandAux.html') # vista Admin
+                return redirect(url_for('adminClandAux')) # vista Admin
               
             #-----------Auxiliares
             
-            if(account[0] == 2 and account[1] == usuario and account[2] == pas):
-                return render_template('index.html') # Vista Auxiliar
+            if (account[0] == 2 and account[1] == usuario and account[2] == pas):
+                return redirect(url_for('perfilAuxiliar')) # Vista Auxiliar
           
             #-----------Clientes
             if(account[0] == 3 and account[1] == usuario and account[2] == pas):
-                return render_template('adminDepartamentos.html') # vista clientes
+                return redirect(url_for('perfilCliente')) # vista clientes
                               
         else:
             flash('Datos incorrectos')
-            return render_template('login.html')
+            return redirect(url_for('log'))
         
         
 @app.route('/Admin/<string:id>')
@@ -174,7 +174,7 @@ def eliminarPersonal(id):
     return redirect(url_for('adminClandAux'))
 
 
-################################################################Departamentos###########################################################################################
+##############################################################-----Departamentos---#######################################################################################
             #CONSULTAR
 @app.route('/adminDepartamentos')
 def AdminDepa():
@@ -236,7 +236,7 @@ def EliminarDepa(id_departamento):
     flash('Departamento Eliminado')
     return redirect(url_for('AdminDepa'))
 
-################################################################Tickets########################################################
+###########################################################------Tickets-----------###############################################
 @app.route('/adminTickets')
 def AdminTickets():
     cursor=mysql.connection.cursor()
@@ -328,11 +328,11 @@ def Reportes():
 
 ################################## PERFIL AUXILIAR #################################################
 @app.route('/perfilAuxiliar')
-def miPerfil():
+def perfilAuxiliar():
     return render_template('perfilAuxiliar.html')
 
 @app.route('/misTickets')
-def misTickets():
+def ticketsAuxiliar():
  return render_template('/misTickets.html')
 
 

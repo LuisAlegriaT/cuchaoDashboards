@@ -362,13 +362,49 @@ def ticketsAuxiliar(loguser):
 ################################## CLIENTE #############################################3
 @app.route('/perfilCliente/<string:loguser>')
 def perfilCliente(loguser):
+
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
+    consulta = cursor.fetchall()
+    return render_template('perfilCliente.html', consultaAuxi = consulta , log= loguser)
+
+@app.route('/editarPerfilCliente/<string:idCliente>')
+def editarPerfilCliente(idCliente):
+    cursor= mysql.connection.cursor()
+    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [idCliente])
+    consulta= cursor.fetchall()
+    cursor1=mysql.connection.cursor()
+    cursor1.execute('SELECT * FROM departamento')
+    consulta1 = cursor1.fetchall()
+    cursor2=mysql.connection.cursor()
+    cursor2.execute('SELECT * FROM tipousers')
+    consulta2 = cursor2.fetchall()
+    return render_template('actualizarPerfilCliente.html', personal= consulta[0], departamento =consulta1, roles=consulta2 , loguser=idCliente )
+
+@app.route('/actualizarPerfilCliente/<string:loguser>',methods =['POST'])
+def actualizarPerfilCliente(loguser):
+    if request.method=='POST':
+        vnombre= request.form['txtnombre']
+        vmail= request.form['txtmail']
+        vdomicilio= request.form['txtdomicilio']
+        vtelefono= request.form['txttelefono']
+        print(vnombre,vmail, vdomicilio,vtelefono,loguser)
+
+        cursor=mysql.connection.cursor()
+        cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s,telefono=%s  where id=%s',(vnombre,vmail, vdomicilio,vtelefono,loguser))
+        mysql.connection.commit()
+
     
     return render_template('perfilCliente.html')
 
 
-@app.route('/adminSolicitud')
-def adminSolicitud():
-    return render_template('adminSolicitud.html')
+    flash('Tu Perfil se actualizo en la BD')
+    return redirect(url_for('perfilCliente',loguser=loguser))
+
+@app.route('/adminSolicitud/<string:loguser>')
+def adminSolicitud(loguser):
+    print(loguser)
+    return render_template('adminSolicitud.html', log = loguser)
 
 @app.route('/crearSolicitud')
 def crearSolicitud():

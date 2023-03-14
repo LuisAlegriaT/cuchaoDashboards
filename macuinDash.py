@@ -394,6 +394,7 @@ def actualizarPerfilCliente(loguser):
         cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s,telefono=%s  where id=%s',(vnombre,vmail, vdomicilio,vtelefono,loguser))
         mysql.connection.commit()
 
+
     
     return render_template('perfilCliente.html')
 

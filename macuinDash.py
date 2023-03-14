@@ -315,10 +315,10 @@ def insertComentarioC(ticket):
 def adminAsignar(id_ticket):
     ticketRecived=id_ticket
     cur=mysql.connection.cursor()
-    cur.execute('SELECT users.nombre, (SELECT COUNT(ticketaux.userAux_id) FROM ticketaux WHERE users.id = ticketaux.userAux_id) AS tickets_Auxiliar FROM users WHERE users.tipo="AUXILIAR"')
+    cur.execute('SELECT users.nombre, (SELECT COUNT(ticketaux.userAux_id) FROM ticketaux WHERE users.id = ticketaux.userAux_id) AS tickets_Auxiliar FROM users WHERE users.tipoId="2"')
     consultaAux=cur.fetchall()
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users WHERE tipo = "AUXILIAR" ')
+    cursor.execute('SELECT * FROM users WHERE tipoId = "2" ')
     consulta = cursor.fetchall()
     return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived,ticketsAux=consultaAux)
 

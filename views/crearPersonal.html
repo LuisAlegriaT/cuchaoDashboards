@@ -51,17 +51,17 @@
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">TIPO</span>
         <select name="txttipo" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-            <option value="ADMIN">ADMIN</option>
-            <option value="AUXILIAR">AUXILIAR</option>
-            <option value="CLIENTE">CLIENTE</option>
+            {%for tipo in tipousuario%}
+            <option value="{{tipo.0}}">{{tipo.1}}</option>
+            {%endfor%}
 
         </select>
       </div>
       
       <div class="input-group">
         <div class="card-footer text-muted">
-            <button class="btn btn-success" type="submit">Actualizar Album</button>
-            <a href="/" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+            <button class="btn btn-success" type="submit">Actualizar Personal</button>
+            <a href="/adminClandAux" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
         </div>
       </div>
       </form>

@@ -366,12 +366,12 @@ def perfilCliente(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
     consulta = cursor.fetchall()
-    return render_template('perfilCliente.html', consultaAuxi = consulta , log= loguser)
+    return render_template('perfilCliente.html', consultaAuxi = consulta , loguser = loguser)
 
-@app.route('/editarPerfilCliente/<string:idCliente>')
-def editarPerfilCliente(idCliente):
+@app.route('/editarPerfilCliente/<string:loguser>')
+def editarPerfilCliente(loguser):
     cursor= mysql.connection.cursor()
-    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [idCliente])
+    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
     consulta= cursor.fetchall()
     cursor1=mysql.connection.cursor()
     cursor1.execute('SELECT * FROM departamento')
@@ -379,7 +379,7 @@ def editarPerfilCliente(idCliente):
     cursor2=mysql.connection.cursor()
     cursor2.execute('SELECT * FROM tipousers')
     consulta2 = cursor2.fetchall()
-    return render_template('actualizarPerfilCliente.html', personal= consulta[0], departamento =consulta1, roles=consulta2 , loguser=idCliente )
+    return render_template('actualizarPerfilCliente.html', personal= consulta[0], departamento =consulta1, roles=consulta2 , loguser=loguser )
 
 @app.route('/actualizarPerfilCliente/<string:loguser>',methods =['POST'])
 def actualizarPerfilCliente(loguser):
@@ -405,7 +405,7 @@ def actualizarPerfilCliente(loguser):
 @app.route('/adminSolicitud/<string:loguser>')
 def adminSolicitud(loguser):
     print(loguser)
-    return render_template('adminSolicitud.html', log = loguser)
+    return render_template('adminSolicitud.html', loguser = loguser)
 
 @app.route('/crearSolicitud')
 def crearSolicitud():

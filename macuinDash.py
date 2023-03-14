@@ -71,21 +71,22 @@ def login():
             session['usuario'] = account[1] # usuario
             session['pas'] = account[2] 
             session['id'] = account[3]# contraseña
-            tipo= account[3]
-            print(account[0],account[1],account[2], tipo)
+            userlog = account[3]
+            #print(account[0],account[1],account[2])
+            print(userlog)
             
             #-----------Administradores
             if(account[0] == 1 and account[1] == usuario and account[2] == pas):
-                return redirect(url_for('adminClandAux')) # vista Admin
+                return redirect(url_for('adminClandAux',loguser=userlog)) # vista Admin
               
             #-----------Auxiliares
             
             if (account[0] == 2 and account[1] == usuario and account[2] == pas):
-                return redirect(url_for('perfilAuxiliar')) # Vista Auxiliar
+                return redirect(url_for('perfilAuxiliar',loguser=userlog)) # Vista Auxiliar
           
             #-----------Clientes
             if(account[0] == 3 and account[1] == usuario and account[2] == pas):
-                return redirect(url_for('perfilCliente')) # vista clientes
+                return redirect(url_for('perfilCliente',loguser=userlog)) # vista clientes
                               
         else:
             flash('Datos incorrectos')
@@ -108,22 +109,22 @@ def logout():
 
 
 #Cliente y Auxiliares
-@app.route('/adminClandAux')
-def adminClandAux():
+@app.route('/adminClandAux/<string:loguser>')
+def adminClandAux(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo')
     consulta = cursor.fetchall()
-    return render_template('adminClandAux.html', usuario=consulta)
+    return render_template('adminClandAux.html', usuario=consulta, loguser=loguser)
 
-@app.route('/loginCrear')
-def loginCrear():
+@app.route('/loginCrear/<string:loguser>')
+def loginCrear(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento')
     consulta = cursor.fetchall()
     cursor2=mysql.connection.cursor()
     cursor2.execute('SELECT * FROM tipousers')
     consulta2 = cursor2.fetchall()
-    return render_template('crearPersonal.html', usuario=consulta, tipousuario = consulta2 )
+    return render_template('crearPersonal.html', usuario=consulta, tipousuario = consulta2,loguser=loguser )
 
 @app.route('/crearPersonal',methods =['POST'])
 def crearPersonal():
@@ -250,8 +251,8 @@ def EliminarDepa(id_departamento):
     return redirect(url_for('AdminDepa'))
 
 ###########################################################------Tickets-----------###############################################
-@app.route('/adminTickets')
-def AdminTickets():
+@app.route('/adminTickets/<string:loguser>')
+def AdminTickets(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT id_ticket, fecha, detalle,estatus, clasificacion, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id) ')
     consulta = cursor.fetchall()
@@ -340,8 +341,8 @@ def Reportes():
 
 
 ################################## PERFIL AUXILIAR #################################################
-@app.route('/perfilAuxiliar/<string:id>')
-def perfilAuxiliar(id_auxiliar):
+@app.route('/perfilAuxiliar/<string:loguser>')
+def perfilAuxiliar(loguser):
     return render_template('perfilAuxiliar.html')
 
 @app.route('/misTickets')
@@ -352,8 +353,8 @@ def ticketsAuxiliar():
 
 
 ################################## CLIENTE #############################################3
-@app.route('/perfilCliente')
-def perfilCliente():
+@app.route('/perfilCliente/<string:loguser>')
+def perfilCliente(loguser):
     return render_template('perfilCliente.html')
 
 

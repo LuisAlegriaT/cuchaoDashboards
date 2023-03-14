@@ -1,62 +1,76 @@
 {%extends 'plantillaAuxiliares.html'%}
 {%block body%}
 <div class="container">
+
+    <div class="display-5 text-dark text-center mt-5 mb-5"> Mis Tickets </div>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
     <div>
         <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
-        </form>
+            <a href="#" class="btn btn-outline-info" type="submit">Reportes</a>
+          </form>
     </div><br>
 
     <div class="container">
         <div class="row">
-            <!--{%for tick in ticket%}-->
+      
             <div class="col">
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: #4D64A4;">
                         TICKETS
                     </div>
-                    
+                    {%for myticket in misTickets%}
                     <div class="card-body">
                         <form action="/crearPersonal" method="POST">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon3">Fecha</span>
-                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">{{myticket.1}}
                             </div>
                         
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Detalle</span>
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Solicitante</span>
                                 <label type="text" name="txtmail" class="form-control"  placeholder="E-MAIL"
-                                    aria-label="Recipient's username" aria-describedby="basic-addon2">Falla Impresora
+                                    aria-label="Recipient's username" aria-describedby="basic-addon2">{{myticket.0}}
                             </div>
                             
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="txtmail " type="text" name="txtmail">Estatus</span>
-                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">En proceso
+                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">{{myticket.2}}
                             </div>
 
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Clasificacion</span>
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Departamento</span>
                                 <label type="text" name="txtmail" class="form-control" placeholder="E-MAIL" aria-label="Recipient's username"
-                                    aria-describedby="basic-addon2">Falla Técnica
-                            </div>
-
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Cliente</span>
-                                <label type="text" name="txtmail" class="form-control" placeholder="E-MAIL" aria-label="Recipient's username"
-                                    aria-describedby="basic-addon2"> Ailec Fernanda Garcia Zamora
+                                    aria-describedby="basic-addon2">{{myticket.3}}
                             </div>
                         </form>
+
                     </div>
+                    {%endfor%}
                     
                     <div class="card-body" style="color: white; background-color: #EEEEEE;">
-                        <a href="/adminAsignar/{{tick.0}}" class="btn" style="color: white; background-color: #17A589;">Asignar</a>
-                        <a href="/adminComentario/{{tick.0}}" class="btn" style="color: white; background-color: #F5B041;">Comentario</a>
+                        <a href="#" class="btn" style="color: white; background-color: #17A589;">Cambiar Estatus</a>
+                        <a href="#x" class="btn" style="color: white; background-color: #F5B041;">Comentario a Cliente</a>
+                        <a href="#x" class="btn" style="color: white; background-color: #41d4f5;">Seguimiento</a>
                     </div>
                 </div>
             </div>
-            <!--{%endfor%}-->
+       
+            
+            
         </div>
     </div>
+    
 </div>
 {%endblock%}

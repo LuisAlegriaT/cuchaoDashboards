@@ -6,7 +6,7 @@
             <div class="col">
                 <div class="card text-center">
                     
-                        <form action="/insertDepas" method="POST" class="row g-3 col-12">
+                        <form action="/insertDepas/{{loguser}}" method="POST" class="row g-3 col-12">
                             <div class="card-body">
                                 <label class="form-label">Nombre</label>
                                 <input type="text"  class="form-control" name="nombreDepa" >
@@ -14,7 +14,7 @@
                         
                             <div class="card-footer text-muted">
                                 <button type="submit" class="btn btn-success">Guardar</button>
-                                <a href="/adminDepartamentos" class="btn btn-danger">Cancelar</a>
+                                <a href="/adminDepartamentos/{{loguser}}" class="btn btn-danger">Cancelar</a>
                             </div>
                         </form>
                 </div>

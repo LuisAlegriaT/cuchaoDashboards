@@ -15,7 +15,7 @@
     {%endif%}
     {%endwith%}
     
-    <form action="/crearPersonal" method="POST">
+    <form action="/crearPersonal/{{loguser}}" method="POST">
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Nombre</span>
         <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
@@ -60,8 +60,8 @@
       
       <div class="input-group">
         <div class="card-footer text-muted">
-            <button class="btn btn-success" type="submit">Actualizar Personal</button>
-            <a href="/adminClandAux" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+            <button class="btn btn-success" type="submit">Guardar Personal</button>
+            <a href="/adminClandAux/{{loguser}}" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
         </div>
       </div>
       </form>

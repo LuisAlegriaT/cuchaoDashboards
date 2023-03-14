@@ -15,7 +15,7 @@
     {%endif%}
     {%endwith%}
 
-  <form action="/actualizarPersonal/{{personal.2}}" method="POST">
+  <form action="/actualizarPersonal/{{personal.2}}/{{loguser}}" method="POST">
 
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon3">Nombre</span>
@@ -61,7 +61,7 @@
       <div class="input-group">
         <div class="card-footer text-muted">
             <button  class="btn btn-warning">ACTUALIZAR</button>
-            <a href="/adminClandAux" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+            <a href="/adminClandAux/{{loguser}}" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
           </div> 
       </div>
   </form>

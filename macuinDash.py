@@ -44,7 +44,7 @@ class user1():
 
 
 
-#/////////////////RUTAS////////////////#
+################################/////////////////RUTAS////////////////############################################
 
 
 #--------Ruta General--------#
@@ -53,23 +53,27 @@ def log():
     return render_template('login.html')
 
 
-#--------Login--------#
+#####################################--------Login--------##############################
 @app.route('/login', methods=["POST"])
 def login():
     if request.method == 'POST':
         usuario = request.form['txtuser']
         pas = request.form['txtpassword']
         cursor = mysql.connection.cursor()
-        cursor.execute('SELECT tipo, nombre, pass FROM users where nombre = %s and pass = %s',(usuario,pas))
+        cursor.execute('SELECT tipoId, nombre, pass, id  FROM users where nombre = %s and pass = %s',(usuario,pas))
         
         mysql.connection.commit()
         account = cursor.fetchone()
         
         if account:
-            session['id'] = account[0] # tipo
+
+            session['rol'] = account[0] # tipo
             session['usuario'] = account[1] # usuario
-            session['pas'] = account[2] # contraseña
-            print(account[0],account[1],account[2])
+            session['pas'] = account[2] 
+            session['id'] = account[3]# contraseña
+            tipo= account[3]
+            print(account[0],account[1],account[2], tipo)
+            
             #-----------Administradores
             if(account[0] == 1 and account[1] == usuario and account[2] == pas):
                 return redirect(url_for('adminClandAux')) # vista Admin
@@ -107,7 +111,7 @@ def logout():
 @app.route('/adminClandAux')
 def adminClandAux():
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users JOIN departamento WHERE (users.departamento_id = departamento.id_departamento)')
+    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo')
     consulta = cursor.fetchall()
     return render_template('adminClandAux.html', usuario=consulta)
 
@@ -116,7 +120,10 @@ def loginCrear():
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento')
     consulta = cursor.fetchall()
-    return render_template('crearPersonal.html', usuario=consulta)
+    cursor2=mysql.connection.cursor()
+    cursor2.execute('SELECT * FROM tipousers')
+    consulta2 = cursor2.fetchall()
+    return render_template('crearPersonal.html', usuario=consulta, tipousuario = consulta2 )
 
 @app.route('/crearPersonal',methods =['POST'])
 def crearPersonal():
@@ -130,22 +137,25 @@ def crearPersonal():
         print(vnombre,vmail,vdomicilio,vdepartamento,vtelefono,vtipo)
 
         cursor=mysql.connection.cursor()
-        cursor.execute('insert into users(nombre ,mail ,status, domicilio, departamento_id ,telefono)values (%s,%s,%s,%s,%s,%s)', 
-        (vnombre,vmail,vtipo, vdomicilio, vdepartamento,vtelefono)) #%s son para las cadenas
+        cursor.execute('insert into users(nombre ,mail, domicilio, departamento_id ,telefono, tipoId)values (%s,%s,%s,%s,%s,%s)', 
+        (vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo)) #%s son para las cadenas
         mysql.connection.commit()
     
-    flash('Album almacenado en la BD')
+    flash('Personal almacenado en la BD')
     return redirect(url_for('adminClandAux')) 
 
 @app.route('/editarPersonal/<string:id>')
 def editarPersonal(id):
     cursor= mysql.connection.cursor()
-    cursor.execute('SELECT * FROM users JOIN departamento ON (users.departamento_id = departamento.id_departamento) where id={0}'.format(id))
+    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo where id={0}'.format(id))
     consulta= cursor.fetchall()
     cursor1=mysql.connection.cursor()
     cursor1.execute('SELECT * FROM departamento')
     consulta1 = cursor1.fetchall()
-    return render_template('actualizarPersonal.html', personal= consulta[0], usuario =consulta1 )
+    cursor2=mysql.connection.cursor()
+    cursor2.execute('SELECT * FROM tipousers')
+    consulta2 = cursor2.fetchall()
+    return render_template('actualizarPersonal.html', personal= consulta[0], usuario =consulta1, roles=consulta2 )
 
 @app.route('/actualizarPersonal/<string:id>',methods =['POST'])
 def actualizarPersonal(id):
@@ -156,22 +166,24 @@ def actualizarPersonal(id):
         vdepartamento= request.form['txtdepartamento']
         vtelefono= request.form['txttelefono']
         vtipo= request.form['txttipo']
+        print(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id);
 
         cursor=mysql.connection.cursor()
-        cursor.execute('update users set nombre=%s ,mail=%s ,tipo=%s, domicilio=%s, departamento_id=%s ,telefono=%s where id=%s',(vnombre,vmail,vtipo, vdomicilio, vdepartamento,vtelefono,id))
+        cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s, departamento_id=%s ,telefono=%s ,tipoId=%s where id=%s',(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id))
         mysql.connection.commit()
 
-    flash('Album se actualizo en la BD')
+    flash('Personal se actualizo en la BD')
     return redirect(url_for('adminClandAux'))
 
 
 @app.route('/eliminarPersonal/<string:id>')
 def eliminarPersonal(id):
     cursor= mysql.connection.cursor()
-    cursor.execute('delete from users where id = %s', [id])
+    cursor.execute('delete from users where id = {0}'.format(id))
     mysql.connection.commit()
     flash('Personal Eliminado de la base de datos')
     return redirect(url_for('adminClandAux'))
+
 
 
 ##############################################################-----Departamentos---#######################################################################################
@@ -201,7 +213,8 @@ def insertarD():
         return redirect(url_for('AdminDepa'))
 
 
-            #ACTUALIZAR
+
+                                #ACTUALIZAR
 
 @app.route('/ActualizarDepartamentos/<id_departamento>')
 def ActualizarDepa(id_departamento):
@@ -327,8 +340,8 @@ def Reportes():
 
 
 ################################## PERFIL AUXILIAR #################################################
-@app.route('/perfilAuxiliar')
-def perfilAuxiliar():
+@app.route('/perfilAuxiliar/<string:id>')
+def perfilAuxiliar(id_auxiliar):
     return render_template('perfilAuxiliar.html')
 
 @app.route('/misTickets')

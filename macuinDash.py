@@ -256,49 +256,50 @@ def AdminTickets(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT id_ticket, fecha, detalle,estatus, clasificacion, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id) ')
     consulta = cursor.fetchall()
-    return render_template('adminTickets.html', ticket=consulta)
+    return render_template('adminTickets.html', ticket=consulta, loguser = loguser)
 
-@app.route('/adminComentario/<id_ticket>')
-def AdminComentario(id_ticket): 
+@app.route('/adminComentario/<id_ticket>/<string:loguser>')
+def AdminComentario(id_ticket,loguser): 
     id_t=id_ticket   
     print(id_t)
-    return render_template('adminComentario.html', ticket=id_t)
+    return render_template('adminComentario.html', ticket=id_t,loguser=loguser)
 
 
     #COMENTARIO PARA AUXILIAR
-@app.route('/ComentarioAuxiliar/<ticket>',methods=['POST'])
-def ComentarioAuxiliar(ticket):
+@app.route('/ComentarioAuxiliar/<ticket>/<string:loguser>',methods=['POST'])
+def ComentarioAuxiliar(ticket,loguser):
     ticket=ticket
     cur= mysql.connection.cursor()
     cur.execute('SELECT nombre FROM users INNER JOIN ticketaux ON users.id = ticketaux.userAux_id INNER JOIN ticket ON ticketaux.ticket_idAux = ticket.id_ticket WHERE ticket.id_ticket = %s',[ticket])
     data=cur.fetchall()
     print(ticket)
-    return render_template('ComentarioAuxiliar.html', ticket1=data,ticket=ticket)
+    return render_template('ComentarioAuxiliar.html', ticket1=data,ticket=ticket ,loguser=loguser)
 
-@app.route('/inssertComentario/<ticket>',methods=['POST'])
-def insertComentario(ticket):
+@app.route('/insertComentario/<ticket>/<string:loguser>',methods=['POST'])
+def insertComentario(ticket,loguser):
   if request.method=='POST':
         #ticket_id=ticket  
         comentarioA= request.form['txtComentarioA'] 
+        print(loguser)
         print(ticket)
         print(comentarioA)
         cursor=mysql.connection.cursor()
         cursor.execute('UPDATE ticket SET comentariosAux = %s WHERE id_ticket = %s',(comentarioA, ticket))
         mysql.connection.commit()
-        return redirect(url_for('AdminTickets(log)'))
+        return redirect(url_for('AdminTickets', loguser=loguser))
 
         #COMENTARIO CLIENTE
-@app.route('/ComentarioCliente/<ticket>',methods=['POST'])
-def ComentarioCliente(ticket):
+@app.route('/ComentarioCliente/<ticket>/<string:loguser>',methods=['POST'])
+def ComentarioCliente(ticket,loguser):
     ticket=ticket
     cur= mysql.connection.cursor()
     cur.execute('SELECT nombre from users INNER JOIN ticket ON ticket.user_idCliente = users.id where ticket.id_ticket=%s',[ticket])
     data=cur.fetchall()
     print(ticket)
-    return render_template('ComentarioCliente.html', ticket1=data,ticket=ticket)
+    return render_template('ComentarioCliente.html', ticket1=data,ticket=ticket,loguser=loguser)
 
-@app.route('/insertComentarioC/<ticket>',methods=['POST'])
-def insertComentarioC(ticket):
+@app.route('/insertComentarioC/<ticket>/<string:loguser>',methods=['POST'])
+def insertComentarioC(ticket,loguser):
   if request.method=='POST':
         #ticket_id=ticket  
         comentarioC= request.form['txtComentarioC'] 
@@ -307,13 +308,13 @@ def insertComentarioC(ticket):
         cursor=mysql.connection.cursor()
         cursor.execute('UPDATE ticket SET comentariosCliente = %s WHERE id_ticket = %s',(comentarioC, ticket))
         mysql.connection.commit()
-        return redirect(url_for('AdminTickets'))
+        return redirect(url_for('AdminTickets',loguser=loguser))
 
 
         #ASIGNAR AUXILIAR
 
-@app.route('/adminAsignar/<id_ticket>')
-def adminAsignar(id_ticket):
+@app.route('/adminAsignar/<id_ticket>/<string:loguser>')
+def adminAsignar(id_ticket,loguser):
     ticketRecived=id_ticket
     cur=mysql.connection.cursor()
     cur.execute('SELECT users.nombre, (SELECT COUNT(ticketaux.userAux_id) FROM ticketaux WHERE users.id = ticketaux.userAux_id) AS tickets_Auxiliar FROM users WHERE users.tipoId="2"')
@@ -321,10 +322,10 @@ def adminAsignar(id_ticket):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM users WHERE tipoId = "2" ')
     consulta = cursor.fetchall()
-    return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived,ticketsAux=consultaAux)
+    return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived,ticketsAux=consultaAux,loguser=loguser)
 
-@app.route('/asignarTicket/<ticketSend>', methods=['POST'])
-def asignarTicket(ticketSend):
+@app.route('/asignarTicket/<ticketSend>/<string:loguser>', methods=['POST'])
+def asignarTicket(ticketSend,loguser):
     if request.method=='POST':
         print(ticketSend)
         auxiliar=request.form['txtAuxiliar']
@@ -332,12 +333,12 @@ def asignarTicket(ticketSend):
         cursor=mysql.connection.cursor()
         cursor.execute('INSERT INTO ticketaux (ticket_idAux, userAux_id) VALUES (%s, %s)',(ticketSend, auxiliar))
         mysql.connection.commit()
-        return redirect(url_for('AdminTickets'))
+        return redirect(url_for('AdminTickets',loguser=loguser))
     
     #REPORTE
-@app.route('/Reportes')
-def Reportes():
-    return render_template('adminReporte.html')
+@app.route('/Reportes/<string:loguser>')
+def Reportes(loguser):
+    return render_template('adminReporte.html',loguser=loguser)
 
 
 ################################## PERFIL AUXILIAR #################################################

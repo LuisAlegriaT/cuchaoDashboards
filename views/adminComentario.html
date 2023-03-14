@@ -25,11 +25,11 @@
                     </div>
                     
                     <div class="card-body" >
-                        <form action="/ComentarioCliente/{{ticket.0}}" method="POST">
+                        <form action="/ComentarioCliente/{{ticket.0}}/{{loguser}}" method="POST">
                             <button type="submit" class="btn " style="color: black; background-color:#C39BD3;">Cliente</button>
                         </form>
                         
-                        <form action="/ComentarioAuxiliar/{{ticket.0}}" method="POST">
+                        <form action="/ComentarioAuxiliar/{{ticket.0}}/{{loguser}}" method="POST">
                             <button type="submit" class="btn " style="color: black; background-color:#C39BD3;">Auxiliar</button>
                         </form>
                         

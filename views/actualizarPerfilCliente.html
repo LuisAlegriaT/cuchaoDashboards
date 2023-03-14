@@ -2,7 +2,7 @@
 {%block body%}
 <div class="container">
 
-    <div class="display-5 text-dark text-center mt-5 mb-5"> Actualizar de Personal </div>
+    <div class="display-5 text-dark text-center mt-5 mb-5"> Actualizar Mi Perfil </div>
     {%with mensaje = get_flashed_messages() %}
     {%if mensaje%}
     {%for msj in mensaje%}
@@ -15,7 +15,7 @@
     {%endif%}
     {%endwith%}
 
-  <form action="/actualizarPersonal/{{personal.2}}" method="POST">
+  <form action="/actualizarPerfilCliente/{{personal.2}}" method="POST">
 
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon3">Nombre</span>
@@ -35,12 +35,9 @@
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Departamento</span>
-        <select name="txtdepartamento" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.1}}">
+        <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.1}}" disabled>
           
-          {%for usu in usuario%}
-          <option value="{{usu.0}}">{{usu.1}}</option>
-          {%endfor%}
-        </select>
+          
         
 
         <span class="input-group-text" id="basic-addon3"> Telefono</span>
@@ -49,19 +46,14 @@
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">TIPO</span>
-        <select name="txttipo" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.11}}">
-            
-            {%for rol in roles%}
-            <option value="{{rol.0}}">{{rol.1}}</option>
-            {%endfor%}
+          <input type="text" name="txttipo" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.11}}" disabled>
 
-        </select>
       </div>
       
       <div class="input-group">
         <div class="card-footer text-muted">
             <button  class="btn btn-warning">ACTUALIZAR</button>
-            <a href="/adminClandAux" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+            <a href="/perfilCliente/{{loguser}}" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
           </div> 
       </div>
   </form>

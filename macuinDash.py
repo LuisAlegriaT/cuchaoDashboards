@@ -126,8 +126,8 @@ def loginCrear(loguser):
     consulta2 = cursor2.fetchall()
     return render_template('crearPersonal.html', usuario=consulta, tipousuario = consulta2,loguser=loguser )
 
-@app.route('/crearPersonal',methods =['POST'])
-def crearPersonal():
+@app.route('/crearPersonal/<string:loguser>',methods =['POST'])
+def crearPersonal(loguser):
     if request.method == 'POST':
         vnombre= request.form['txtnombre']
         vmail= request.form['txtmail']
@@ -143,10 +143,10 @@ def crearPersonal():
         mysql.connection.commit()
     
     flash('Personal almacenado en la BD')
-    return redirect(url_for('adminClandAux')) 
+    return redirect(url_for('adminClandAux',loguser=loguser)) 
 
-@app.route('/editarPersonal/<string:id>')
-def editarPersonal(id):
+@app.route('/editarPersonal/<string:loguser>/<string:id>')
+def editarPersonal(id, loguser):
     cursor= mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo where id={0}'.format(id))
     consulta= cursor.fetchall()
@@ -156,10 +156,10 @@ def editarPersonal(id):
     cursor2=mysql.connection.cursor()
     cursor2.execute('SELECT * FROM tipousers')
     consulta2 = cursor2.fetchall()
-    return render_template('actualizarPersonal.html', personal= consulta[0], usuario =consulta1, roles=consulta2 )
+    return render_template('actualizarPersonal.html', personal= consulta[0], usuario =consulta1, roles=consulta2, loguser=loguser)
 
-@app.route('/actualizarPersonal/<string:id>',methods =['POST'])
-def actualizarPersonal(id):
+@app.route('/actualizarPersonal/<string:id>/<string:loguser>',methods =['POST'])
+def actualizarPersonal(id, loguser):
     if request.method=='POST':
         vnombre= request.form['txtnombre']
         vmail= request.form['txtmail']
@@ -167,43 +167,43 @@ def actualizarPersonal(id):
         vdepartamento= request.form['txtdepartamento']
         vtelefono= request.form['txttelefono']
         vtipo= request.form['txttipo']
-        print(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id);
+        print(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id)
 
         cursor=mysql.connection.cursor()
         cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s, departamento_id=%s ,telefono=%s ,tipoId=%s where id=%s',(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id))
         mysql.connection.commit()
 
     flash('Personal se actualizo en la BD')
-    return redirect(url_for('adminClandAux'))
+    return redirect(url_for('adminClandAux', loguser = loguser))
 
 
-@app.route('/eliminarPersonal/<string:id>')
-def eliminarPersonal(id):
+@app.route('/eliminarPersonal/<string:id>/<string:loguser>')
+def eliminarPersonal(id, loguser):
     cursor= mysql.connection.cursor()
     cursor.execute('delete from users where id = {0}'.format(id))
     mysql.connection.commit()
     flash('Personal Eliminado de la base de datos')
-    return redirect(url_for('adminClandAux'))
+    return redirect(url_for('adminClandAux', loguser = loguser))
 
 
 
 ##############################################################-----Departamentos---#######################################################################################
             #CONSULTAR
-@app.route('/adminDepartamentos')
-def AdminDepa():
+@app.route('/adminDepartamentos/<string:loguser>')
+def AdminDepa(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento')
     consulta = cursor.fetchall()
-    return render_template('adminDepartamentos.html', departamento=consulta)
+    return render_template('adminDepartamentos.html', departamento=consulta, loguser=loguser)
 
 
             #INSERTAR
-@app.route('/CrearDepartamentos')
-def CrearDepa():
-    return render_template('CrearDep.html')
+@app.route('/CrearDepartamentos/<string:loguser>')
+def CrearDepa(loguser):
+    return render_template('CrearDep.html', loguser= loguser)
 
-@app.route('/insertDepas', methods=['POST'])
-def insertarD():
+@app.route('/insertDepas/<string:loguser>', methods=['POST'])
+def insertarD(loguser):
     if request.method == ('POST'):
         depaName = request.form['nombreDepa']
         print(depaName)
@@ -211,22 +211,22 @@ def insertarD():
         cur.execute('INSERT INTO departamento(nombre_departamento)values(%s)',[depaName])
         mysql.connection.commit()
         flash('Departamento Agregado')
-        return redirect(url_for('AdminDepa'))
+        return redirect(url_for('AdminDepa', loguser= loguser))
 
 
 
                                 #ACTUALIZAR
 
-@app.route('/ActualizarDepartamentos/<id_departamento>')
-def ActualizarDepa(id_departamento):
+@app.route('/ActualizarDepartamentos/<id_departamento>/<string:loguser>')
+def ActualizarDepa(id_departamento, loguser):
     cur= mysql.connection.cursor()
     cur.execute('SELECT * FROM departamento WHERE id_departamento = %s',[id_departamento])
     data=cur.fetchall()
     print(data)
-    return render_template('ActualizarDep.html',departamento=data[0])
+    return render_template('ActualizarDep.html',departamento=data[0], loguser= loguser)
 
-@app.route('/updateDepartamento/<id_departamento>', methods=['POST'])
-def updateDepartamento(id_departamento):
+@app.route('/updateDepartamento/<id_departamento>/<string:loguser>', methods=['POST'])
+def updateDepartamento(id_departamento, loguser):
     if request.method == 'POST':
         depaName= request.form['nombreDepa']
         print(depaName)
@@ -239,16 +239,16 @@ def updateDepartamento(id_departamento):
         """,(depaName,id_departamento))
         mysql.connection.commit()
         flash('Departamento Actualizado!')
-        return redirect(url_for('AdminDepa'))
+        return redirect(url_for('AdminDepa', loguser=loguser))
 
         #ELIMINAR 
-@app.route('/EliminarDepartamentos/<string:id_departamento>')
-def EliminarDepa(id_departamento):
+@app.route('/EliminarDepartamentos/<string:id_departamento>/<string:loguser>')
+def EliminarDepa(id_departamento, loguser):
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM departamento WHERE id_departamento =  {0}'.format(id_departamento))
     mysql.connection.commit()
     flash('Departamento Eliminado')
-    return redirect(url_for('AdminDepa'))
+    return redirect(url_for('AdminDepa',loguser = loguser))
 
 ###########################################################------Tickets-----------###############################################
 @app.route('/adminTickets/<string:loguser>')
@@ -398,22 +398,44 @@ def actualizarPerfilCliente(loguser):
         cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s,telefono=%s  where id=%s',(vnombre,vmail, vdomicilio,vtelefono,loguser))
         mysql.connection.commit()
 
-
-    
-    return render_template('perfilCliente.html')
-
-
     flash('Tu Perfil se actualizo en la BD')
     return redirect(url_for('perfilCliente',loguser=loguser))
 
 @app.route('/adminSolicitud/<string:loguser>')
 def adminSolicitud(loguser):
-    print(loguser)
-    return render_template('adminSolicitud.html', loguser = loguser)
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id WHERE id= %s ', [loguser])
+    consulta = cursor.fetchall()
+    return render_template('adminSolicitud.html', miSolicitud= consulta ,loguser = loguser)
 
-@app.route('/crearSolicitud')
-def crearSolicitud():
-    return render_template('crearSolicitud.html')
+@app.route('/crearSolicitud/<string:loguser>')
+def crearSolicitud(loguser):
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT users.id, users.nombre,departamento.id_departamento, departamento.nombre_departamento FROM users INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE id= %s ', [loguser])
+    consulta = cursor.fetchall()
+    return render_template('crearSolicitud.html', loguser=loguser, personal =consulta)
+
+@app.route('/insertSolicitud/<string:loguser>', methods=['POST'])
+def insertarSolicitud(loguser):
+    if request.method=='POST':
+        print(loguser)
+        
+        fecha=request.form['txtfecha']
+        clasificacion=request.form['txtclasificacion']
+        detalles= request.form['txtdetalles'] 
+        print(fecha, clasificacion, detalles)
+        cursor=mysql.connection.cursor()
+        cursor.execute('INSERT INTO ticket (fecha,detalle, clasificacion,user_idCliente) VALUES (%s, %s,%s, %s)',(fecha, detalles, clasificacion, loguser))
+        mysql.connection.commit()
+        return redirect(url_for('adminSolicitud', loguser = loguser ))
+
+@app.route('/EliminarSolicitud/<string:loguser>/<string:idSolicitud>')
+def EliminarSolicitud(loguser, idSolicitud):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM ticket  WHERE id_ticket= {0}'.format(idSolicitud))
+    mysql.connection.commit()
+    flash('Solicitud Eliminada')
+    return redirect(url_for('adminSolicitud',loguser=loguser))
 
 
 

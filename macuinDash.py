@@ -340,6 +340,15 @@ def asignarTicket(ticketSend,loguser):
 def Reportes(loguser):
     return render_template('adminReporte.html',loguser=loguser)
 
+@app.route('/Seguimiento/<id_ticket>/<string:loguser>')
+def Seguimiento(id_ticket,loguser):
+    return render_template('adminSeguimiento.html',loguser=loguser, id_ticket=id_ticket)
+
+@app.route('/cambioEstatus/<string:loguser>')
+def cambioEstatus(loguser):
+    return render_template('adminEstatus.html',loguser=loguser)
+
+
 
 ################################## PERFIL AUXILIAR #################################################
 @app.route('/perfilAuxiliar/<string:loguser>')
@@ -381,13 +390,8 @@ def editarPerfilCliente(loguser):
     cursor= mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
     consulta= cursor.fetchall()
-    cursor1=mysql.connection.cursor()
-    cursor1.execute('SELECT * FROM departamento')
-    consulta1 = cursor1.fetchall()
-    cursor2=mysql.connection.cursor()
-    cursor2.execute('SELECT * FROM tipousers')
-    consulta2 = cursor2.fetchall()
-    return render_template('actualizarPerfilCliente.html', personal= consulta[0], departamento =consulta1, roles=consulta2 , loguser=loguser )
+    
+    return render_template('actualizarPerfilCliente.html', personal= consulta[0] , loguser=loguser )
 
 @app.route('/actualizarPerfilCliente/<string:loguser>',methods =['POST'])
 def actualizarPerfilCliente(loguser):

@@ -135,11 +135,12 @@ def crearPersonal(loguser):
         vdepartamento= request.form['txtdepartamento']
         vtelefono= request.form['txttelefono']
         vtipo= request.form['txttipo']
+        vpass= request.form['txtpass']
         print(vnombre,vmail,vdomicilio,vdepartamento,vtelefono,vtipo)
 
         cursor=mysql.connection.cursor()
-        cursor.execute('insert into users(nombre ,mail, domicilio, departamento_id ,telefono, tipoId)values (%s,%s,%s,%s,%s,%s)', 
-        (vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo)) #%s son para las cadenas
+        cursor.execute('insert into users(nombre ,mail,pass, domicilio, departamento_id ,telefono, tipoId)values (%s,%s,%s,%s,%s,%s,%s)', 
+        (vnombre,vmail,vpass, vdomicilio, vdepartamento,vtelefono,vtipo)) #%s son para las cadenas
         mysql.connection.commit()
     
     flash('Personal almacenado en la BD')
@@ -340,13 +341,7 @@ def asignarTicket(ticketSend,loguser):
 def Reportes(loguser):
     return render_template('adminReporte.html',loguser=loguser)
 
-@app.route('/Seguimiento/<id_ticket>/<string:loguser>')
-def Seguimiento(id_ticket,loguser):
-    return render_template('adminSeguimiento.html',loguser=loguser, id_ticket=id_ticket)
 
-@app.route('/cambioEstatus/<string:loguser>')
-def cambioEstatus(loguser):
-    return render_template('adminEstatus.html',loguser=loguser)
 
 
 
@@ -368,6 +363,15 @@ def ticketsAuxiliar(loguser):
 
 @app.route('/actualizarAuxiliar/<string:loguser>')
 def actualizarAuxiliar(loguser):
+    return render_template('actualizarAuxiliar.html',loguser=loguser)
+
+@app.route('/Seguimiento/<string:loguser>')
+def Seguimiento(loguser):
+    return render_template('adminSeguimiento.html',loguser=loguser)
+
+@app.route('/cambioEstatus/<string:loguser>')
+def cambioEstatus(loguser):
+    return render_template('adminEstatus.html',loguser=loguser)
  
 
 

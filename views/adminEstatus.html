@@ -1,0 +1,60 @@
+{%extends 'plantilla.html'%}
+{%block body%}
+<div class="container">
+
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+    <br>
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                        CAMBIO DE ESTATUS
+                    </div>
+                    <div class="card-body">
+                        <form class="row g-3">
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon3">Detalle</span>
+                                <input type="text" name="txtdetalle" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+
+
+                                <span class="input-group-text" id="basic-addon3">Estatus</span>
+                                <select name="txtestatus" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3"
+                                    value="">
+                                
+                                    
+                                    <option value=""></option>
+                                    
+                                </select>
+                                
+                            </div>
+                           
+
+
+                            <div class="btn-group-sm col-md-2" role="group" aria-label="Basic mixed styles example">
+                                <button class="btn btn-outline-success" type="submit">Cambiar</button>
+                                <a href="/adminTickets/{{loguser}}" class="btn btn-outline-danger"
+                                    type="submit">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{%endblock%}

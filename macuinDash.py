@@ -354,10 +354,13 @@ def ticketsAuxiliar(loguser):
     cur= mysql.connection.cursor()
     cur.execute('SELECT users.nombre, ticket.fecha, ticket.estatus, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',[loguser])
     data=cur.fetchall()
-    return render_template('/misTickets.html',loguser=loguser,misTickets=data)
+    return render_template('misTickets.html',loguser=loguser,misTickets=data)
 
 @app.route('/actualizarAuxiliar/<string:loguser>')
 def actualizarAuxiliar(loguser):
+
+    return render_template('actualizarAuxiliar.html',loguser=loguser)
+
  
 
 

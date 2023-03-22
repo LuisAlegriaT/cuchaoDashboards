@@ -48,14 +48,17 @@
                                 <span class="input-group-text" id="basic-addon3" style="background-color: white;" id="basic-addon3">Rango</span>
                                 <label type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3" disabled> {{myTicket.4}}</label>
                             </div>
-                                                        
+                            {%endfor%}
                             <div class="card-body" style="color: white; text-align: right" >
-                                <a href="/actualizarAuxiliar/{{loguser}}" class="btn" style="color: white; background-color: #F5B041;">Actualizar</a>
+
+                                
+                                <a href="/editarAuxiliar/{{loguser}}" class="btn" style="color: white; background-color: #F5B041;">Actualizar</a>
+
                                 
                             </div>
                         </form>
                     </div>
-                    {%endfor%}
+                    
                 </div>
             </div> 
         </div>

@@ -135,11 +135,12 @@ def crearPersonal(loguser):
         vdepartamento= request.form['txtdepartamento']
         vtelefono= request.form['txttelefono']
         vtipo= request.form['txttipo']
+        vpass= request.form['txtpass']
         print(vnombre,vmail,vdomicilio,vdepartamento,vtelefono,vtipo)
 
         cursor=mysql.connection.cursor()
-        cursor.execute('insert into users(nombre ,mail, domicilio, departamento_id ,telefono, tipoId)values (%s,%s,%s,%s,%s,%s)', 
-        (vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo)) #%s son para las cadenas
+        cursor.execute('insert into users(nombre ,mail,pass, domicilio, departamento_id ,telefono, tipoId)values (%s,%s,%s,%s,%s,%s,%s)', 
+        (vnombre,vmail,vpass, vdomicilio, vdepartamento,vtelefono,vtipo)) #%s son para las cadenas
         mysql.connection.commit()
     
     flash('Personal almacenado en la BD')
@@ -340,13 +341,7 @@ def asignarTicket(ticketSend,loguser):
 def Reportes(loguser):
     return render_template('adminReporte.html',loguser=loguser)
 
-@app.route('/Seguimiento/<id_ticket>/<string:loguser>')
-def Seguimiento(id_ticket,loguser):
-    return render_template('adminSeguimiento.html',loguser=loguser, id_ticket=id_ticket)
 
-@app.route('/cambioEstatus/<string:loguser>')
-def cambioEstatus(loguser):
-    return render_template('adminEstatus.html',loguser=loguser)
 
 
 
@@ -357,26 +352,51 @@ def perfilAuxiliar(loguser):
     cur.execute('SELECT users.nombre, users.mail, users.domicilio, users.telefono, tipousers.tipoUsuario FROM users INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.id=%s',[loguser])
     data=cur.fetchall()
     print(data)
-    return render_template('perfilAuxiliar.html',loguser=loguser,myInfo=data)
+    return render_template('perfilAuxiliar.html', loguser = loguser,myInfo=data)
+
+
+@app.route('/editarAuxiliar/<string:loguser>')
+def editarAuxiliar(loguser):
+    cursor= mysql.connection.cursor()
+    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ',[loguser])   
+    consulta= cursor.fetchall()
+    return render_template('actualizarAuxiliar.html', personal= consulta[0] , loguser=loguser )
+
+@app.route('/actualizarAuxiliar/<string:loguser>',methods =['POST'])
+def actualizarAuxiliar(loguser):
+    if request.method=='POST':
+        vnombre= request.form['txtnombre']
+        vmail= request.form['txtmail']
+        vdomicilio= request.form['txtdomicilio']
+        vtelefono= request.form['txttelefono']
+        print(vnombre,vmail, vdomicilio,vtelefono,loguser)
+
+        cursor=mysql.connection.cursor()
+        cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s,telefono=%s  where id=%s',(vnombre,vmail, vdomicilio,vtelefono,loguser))
+        mysql.connection.commit()
+
+    flash('Tu Perfil se actualizo en la BD')
+    return redirect(url_for('perfilAuxiliar',loguser=loguser))
+
+@app.route('/Seguimiento/<string:loguser>')
+def Seguimiento(loguser):
+    return render_template('adminSeguimiento.html',loguser=loguser)
+
+@app.route('/cambioEstatus/<string:loguser>')
+def cambioEstatus(loguser):
+    return render_template('adminEstatus.html',loguser=loguser)
 
 @app.route('/misTickets/<string:loguser>')
 def ticketsAuxiliar(loguser):
     cur= mysql.connection.cursor()
     cur.execute('SELECT users.nombre, ticket.fecha, ticket.estatus, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',[loguser])
     data=cur.fetchall()
-    return render_template('misTickets.html',loguser=loguser,misTickets=data)
-
-@app.route('/actualizarAuxiliar/<string:loguser>')
-def actualizarAuxiliar(loguser):
-
-    return render_template('actualizarAuxiliar.html',loguser=loguser)
-
- 
+    return render_template('misTickets.html',loguser=loguser,misTickets=data) 
 
 
 
 
-################################## CLIENTE #############################################3
+################################## PERFIL CLIENTE #############################################3
 @app.route('/perfilCliente/<string:loguser>')
 def perfilCliente(loguser):
 
@@ -390,7 +410,6 @@ def editarPerfilCliente(loguser):
     cursor= mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
     consulta= cursor.fetchall()
-    
     return render_template('actualizarPerfilCliente.html', personal= consulta[0] , loguser=loguser )
 
 @app.route('/actualizarPerfilCliente/<string:loguser>',methods =['POST'])

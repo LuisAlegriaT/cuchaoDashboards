@@ -378,20 +378,34 @@ def actualizarAuxiliar(loguser):
     flash('Tu Perfil se actualizo en la BD')
     return redirect(url_for('perfilAuxiliar',loguser=loguser))
 
-@app.route('/Seguimiento/<string:loguser>')
-def Seguimiento(loguser):
-    return render_template('adminSeguimiento.html',loguser=loguser)
+@app.route('/Seguimiento/<string:loguser>/<string:id_ticket>')
+def Seguimiento(loguser, id_ticket):
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT ticket.id_ticket, ticket.detalle, ticket.fecha, ticket.estatus , users.nombre, departamento.nombre_departamento FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento  WHERE ticket.id_ticket = %s',[id_ticket])
+    data=cur.fetchall()
+    return render_template('auxSeguimiento.html',loguser=loguser , tickets=data )
 
-@app.route('/cambioEstatus/<string:loguser>')
-def cambioEstatus(loguser):
-    return render_template('adminEstatus.html',loguser=loguser)
+@app.route('/SeguimientoEstatus/<string:id>/<string:loguser>',methods =['POST'])
+def SeguimientoEstatus(id, loguser):
+    if request.method=='POST':
+        estatus= request.form['txtestatus']
+        print(loguser)
+
+        cursor=mysql.connection.cursor()
+        cursor.execute('update ticket set estatus=%s  where id_ticket=%s',(estatus, id))
+        mysql.connection.commit()
+
+    flash('Se ha guardado correctamente el estatus del ticket')
+    return redirect(url_for('ticketsAuxiliar',loguser=loguser))
+
+
 
 @app.route('/misTickets/<string:loguser>')
 def ticketsAuxiliar(loguser):
     cur= mysql.connection.cursor()
-    cur.execute('SELECT users.nombre, ticket.fecha, ticket.estatus, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',[loguser])
+    cur.execute('SELECT users.nombre, ticket.fecha, ticket.estatus, departamento.nombre_departamento, ticket.id_ticket, ticket.detalle FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',[loguser])
     data=cur.fetchall()
-    return render_template('misTickets.html',loguser=loguser,misTickets=data) 
+    return render_template('misTickets.html',loguser=loguser, misTickets=data) 
 
 
 
@@ -463,6 +477,10 @@ def EliminarSolicitud(loguser, idSolicitud):
     mysql.connection.commit()
     flash('Solicitud Eliminada')
     return redirect(url_for('adminSolicitud',loguser=loguser))
+
+@app.route('/ComentariosCliente/<string:loguser>')
+def ComentariosCliente(loguser):
+    return render_template('clienteComentario.html',loguser=loguser)
 
 
 

@@ -6,8 +6,11 @@ from flask_session import Session
 
 
 
+
 #inicializar el Framework
 app= Flask(__name__, template_folder='views')
+
+
 
 #iniciar el Depurador Automaticamente
 
@@ -60,14 +63,22 @@ def login():
         usuario = request.form['txtuser']
         pas = request.form['txtpassword']
         cursor = mysql.connection.cursor()
+#<<<<<<< gioMF
+        cursor.execute('SELECT tipoId, nombre, password FROM users where nombre = %s and password = %s',(usuario,pas))
+#=======
         cursor.execute('SELECT tipoId, nombre, pass, id  FROM users where nombre = %s and pass = %s',(usuario,pas))
+#>>>>>>> main
         
         mysql.connection.commit()
         account = cursor.fetchone()
         
         if account:
+#<<<<<<< gioMF
+            session['id'] = account[0] # tipo
+#=======
 
             session['rol'] = account[0] # tipo
+#>>>>>>> main
             session['usuario'] = account[1] # usuario
             session['pas'] = account[2] 
             session['id'] = account[3]# contraseña
@@ -99,12 +110,11 @@ def Admin(id):
         return render_template('login.html')
     else:
         return render_template('adminTickets.html', user = user)  
-
+ 
 @app.route('/logout')
 def logout():
     session['id']=None
-    return render_template('login.html')  
-
+    return render_template('login.html') 
 
 
 

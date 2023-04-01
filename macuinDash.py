@@ -63,22 +63,15 @@ def login():
         usuario = request.form['txtuser']
         pas = request.form['txtpassword']
         cursor = mysql.connection.cursor()
-#<<<<<<< gioMF
-        cursor.execute('SELECT tipoId, nombre, password FROM users where nombre = %s and password = %s',(usuario,pas))
-#=======
+
         cursor.execute('SELECT tipoId, nombre, pass, id  FROM users where nombre = %s and pass = %s',(usuario,pas))
-#>>>>>>> main
-        
+       
         mysql.connection.commit()
         account = cursor.fetchone()
         
         if account:
-#<<<<<<< gioMF
-            session['id'] = account[0] # tipo
-#=======
 
             session['rol'] = account[0] # tipo
-#>>>>>>> main
             session['usuario'] = account[1] # usuario
             session['pas'] = account[2] 
             session['id'] = account[3]# contraseña

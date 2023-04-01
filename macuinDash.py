@@ -483,7 +483,7 @@ def EliminarSolicitud(loguser, idSolicitud):
 
 @app.route('/ComentariosCliente/<string:loguser>')
 def ComentariosCliente(loguser):
-    return render_template('clienteComentario.html',loguser=loguser)
+    return render_template('clienteComentarios.html',loguser=loguser)
 
 
 

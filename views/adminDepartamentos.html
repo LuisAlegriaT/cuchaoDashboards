@@ -26,7 +26,7 @@
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
            
-            <a href="/CrearDepartamentos" class="btn btn-outline-success">Nuevo</a>
+            <a href="/CrearDepartamentos/{{loguser}}" class="btn btn-outline-success">Nuevo</a>
           </form>
     </div><br>
 
@@ -44,8 +44,8 @@
                         
                     </div>
                     <div class="card-footer text-muted">
-                        <a href="/ActualizarDepartamentos/{{depa.0}}" class="btn btn-danger">Actualizar</a><br><br>
-                        <a href="/EliminarDepartamentos/{{depa.0}}" class="btn btn-warning">Eliminar</a>
+                        <a href="/ActualizarDepartamentos/{{depa.0}}/{{loguser}}" class="btn btn-danger">Actualizar</a><br><br>
+                        <a href="/EliminarDepartamentos/{{depa.0}}/{{loguser}}" class="btn btn-warning">Eliminar</a>
                       </div> 
                 </div>
                 <br>

@@ -31,7 +31,7 @@
         <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
-            <a href="/loginCrear" class="btn btn-outline-success">Nuevo</a>
+            <a href="/loginCrear/{{loguser}}" class="btn btn-outline-success">Nuevo</a>
           </form>
     </div><br>
 
@@ -41,16 +41,16 @@
             <div class="col">
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: #4D64A4;">
-                        {{usu.1}}
+                        {{usu.3}}
                     </div>
                     <div class="card-body">
-                        <label class="card-title">{{usu.9}}</label><br>
-                        <label class="card-text">{{usu.2}}</label><br>
-                        <label for="">{{usu.7}}</label>
+                        <label class="card-title">{{usu.1}}</label><br>
+                        <label class="card-text">{{usu.4}}</label><br>
+                        <label for="">{{usu.11}}</label>
                     </div>
                     <div class="card-footer text-muted">
-                        <a href="/editarPersonal/{{usu.0}}" class="btn btn-danger">Actualizar</a>
-                        <a href="/eliminarPersonal/{{usu.0}}" class="btn btn-warning">Eliminar</a>
+                        <a href="/editarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-danger">Actualizar</a>
+                        <a href="/eliminarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-warning">Eliminar</a>
                       </div> 
                 </div>
                 <br>

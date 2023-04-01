@@ -1,0 +1,67 @@
+{%extends 'plantillaAuxiliares.html'%}
+{%block body%}
+<div class="container">
+
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+    <br>
+    <div class="container">
+        <div class="row">
+    
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                       MI PERFIL
+                    </div>
+
+                    {%for myTicket in myInfo%}
+                    <div class="card-body">
+                        <form class="row g-3">
+                            <div class="input-group mb-1">
+                                <span class="input-group-text" id="basic-addon3" style="background-color: white;">Nombre</span>
+                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3" disabled>{{myTicket.0}}</label>
+                            </div>
+
+                            <div class="input-group mb-1">
+                                <span class="input-group-text" style="background-color: white;" id="basic-addon3">e-mail</span>
+                                <label type="text" name="txtdepartamento"  class="form-control" id="basic-url" aria-describedby="basic-addon3" disabled>{{myTicket.1}}</label>
+                        
+                                <span class="input-group-text" id="basic-addon3" style="background-color: white;" id="basic-addon3">Domicilio</span>
+                                <label type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
+                                    disabled> {{myTicket.2}}</label>
+                            </div>
+
+                            <div class="input-group mb-1">
+                                <span class="input-group-text" style="background-color: white;" id="basic-addon3">Telefono</span>
+                                <label type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
+                                     disabled>{{myTicket.3}}</label>
+                                <span class="input-group-text" id="basic-addon3" style="background-color: white;" id="basic-addon3">Rango</span>
+                                <label type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3" disabled> {{myTicket.4}}</label>
+                            </div>
+                            {%endfor%}
+                            <div class="card-body" style="color: white; text-align: right" >
+
+                                
+                                <a href="/editarAuxiliar/{{loguser}}" class="btn" style="color: white; background-color: #F5B041;">Actualizar</a>
+
+                                
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+{%endblock%}

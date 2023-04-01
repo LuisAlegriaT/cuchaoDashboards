@@ -1,8 +1,8 @@
-{%extends 'plantilla.html'%}
+{%extends 'plantillaAuxiliares.html'%}
 {%block body%}
 <div class="container">
 
-    <div class="display-5 text-dark text-center mt-5 mb-5"> Administrador de Tickets </div>
+    <div class="display-5 text-dark text-center mt-5 mb-5"> Mis Tickets </div>
     {%with mensaje = get_flashed_messages() %}
     {%if mensaje%}
     {%for msj in mensaje%}
@@ -18,61 +18,54 @@
         <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
-            <a href="/Reportes/{{loguser}}" class="btn btn-outline-info" type="submit">Reportes</a>
+            <a href="#" class="btn btn-outline-info" type="submit">Reportes</a>
           </form>
     </div><br>
 
     <div class="container">
         <div class="row">
-            {%for tick in ticket%}
+            
+            {%for myticket in misTickets%}
             <div class="col">
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: #4D64A4;">
                         TICKETS
                     </div>
-                    
+            
                     <div class="card-body">
-                        <form action="/crearPersonal/{{loguser}}" method="POST">
+                        <form action="/crearPersonal" method="POST">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon3">Fecha</span>
-                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3"> {{tick.1}}
+                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">{{myticket.1}}
                             </div>
                         
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Detalle</span>
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Solicitante</span>
                                 <label type="text" name="txtmail" class="form-control"  placeholder="E-MAIL"
-                                    aria-label="Recipient's username" aria-describedby="basic-addon2"> {{tick.2}}
+                                    aria-label="Recipient's username" aria-describedby="basic-addon2">{{myticket.0}}
                             </div>
                             
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="txtmail " type="text" name="txtmail">Estatus</span>
-                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">{{tick.3}}
+                                <label type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">{{myticket.2}}
                             </div>
 
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Clasificacion</span>
+                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Departamento</span>
                                 <label type="text" name="txtmail" class="form-control" placeholder="E-MAIL" aria-label="Recipient's username"
-                                    aria-describedby="basic-addon2"> {{tick.4}}
+                                    aria-describedby="basic-addon2">{{myticket.3}}
                             </div>
-
-                            <div class="input-group mb-3">
-                                <span class="input-group-text" id="txtmail " type="text" name="txtmail">Cliente</span>
-                                <label type="text" name="txtmail" class="form-control" placeholder="E-MAIL" aria-label="Recipient's username"
-                                    aria-describedby="basic-addon2"> {{tick.6}}
-                            </div>
-                        
-                        
-                           
                         </form>
 
                     </div>
                     
                     
                     <div class="card-body" style="color: white; background-color: #EEEEEE;">
-                        <a href="/adminAsignar/{{tick.0}}/{{loguser}}" class="btn" style="color: white; background-color: #17A589;">Asignar</a>
-                        <a href="/adminComentario/{{tick.0}}/{{loguser}}" class="btn" style="color: white; background-color: #F5B041;">Comentario</a>
                         
+                        <a href="#x" class="btn" style="color: white; background-color: #F5B041;">Comentario a Cliente</a>
+                        <a href="/Seguimiento/{{loguser}}/{{myticket.4}}" class="btn" style="color: white; background-color: #41d4f5;">Seguimiento</a>
                     </div>
+                
                 </div>
             </div>
             {%endfor%}
@@ -81,13 +74,5 @@
         </div>
     </div>
     
-    
-
-
-
-
-
-
-
 </div>
 {%endblock%}

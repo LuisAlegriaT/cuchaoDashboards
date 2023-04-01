@@ -27,7 +27,7 @@
                     
                     <div class="card-body">
                         
-                        <form class="row g-3" action="/insertComentarioC/{{ticket}}" method="POST">
+                        <form class="row g-3" action="/insertComentarioC/{{ticket}}/{{loguser}}" method="POST">
                                 {%for tick in ticket1%}
                                 <div class="col-md-6">
                                     <label for="inputEmail4" class="form-label">Cliente</label>
@@ -44,7 +44,7 @@
                             <div class="col-12">
                                 <button type="submit" class="btn "
                                 style="color: black; background-color: #F4D03F;">Enviar</button>
-                                <a href="/adminTickets" type="submit" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+                                <a href="/adminTickets/{{loguser}}" type="submit" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
                                 
                             </div>
                         </form>

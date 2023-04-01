@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="row g-3" action="/asignarTicket/{{ticketSend}}" method="POST">
+                        <form class="row g-3" action="/asignarTicket/{{ticketSend}}/{{loguser}}" method="POST">
                                 <div class="col-md-4">
                                     <label for="inputState" class="form-label">Auxiliares</label>
                                     <select id="inputState" class="form-select" name="txtAuxiliar" >
@@ -37,7 +37,7 @@
                             
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Asignar</button>
-                                <a type="submit" href="/adminTickets" class="btn btn-primary">Regresar</a>
+                                <a type="submit" href="/adminTickets/{{loguser}}" class="btn btn-primary">Regresar</a>
                             </div>
                         </form>
                     </div>

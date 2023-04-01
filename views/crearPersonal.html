@@ -15,7 +15,7 @@
     {%endif%}
     {%endwith%}
     
-    <form action="/crearPersonal" method="POST">
+    <form action="/crearPersonal/{{loguser}}" method="POST">
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Nombre</span>
         <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
@@ -30,6 +30,9 @@
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Domicilio</span>
         <input type="text" name="txtdomicilio" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+
+        <span class="input-group-text" id="basic-addon3">Password</span>
+        <input type="text" name="txtpass" class="form-control" id="basic-url" aria-describedby="basic-addon3">
       </div>
       
       <div class="input-group mb-3">
@@ -51,17 +54,17 @@
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">TIPO</span>
         <select name="txttipo" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-            <option value="ADMIN">ADMIN</option>
-            <option value="AUXILIAR">AUXILIAR</option>
-            <option value="CLIENTE">CLIENTE</option>
+            {%for tipo in tipousuario%}
+            <option value="{{tipo.0}}">{{tipo.1}}</option>
+            {%endfor%}
 
         </select>
       </div>
       
       <div class="input-group">
         <div class="card-footer text-muted">
-            <button class="btn btn-success" type="submit">Actualizar Album</button>
-            <a href="/" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+            <button class="btn btn-success" type="submit">Guardar Personal</button>
+            <a href="/adminClandAux/{{loguser}}" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
         </div>
       </div>
       </form>

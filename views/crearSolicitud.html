@@ -1,4 +1,4 @@
-{%extends 'plantilla.html'%}
+{%extends 'plantillaCliente.html'%}
 {%block body%}
 <div class="container">
 
@@ -16,35 +16,37 @@
     {%endwith%}
     
     
-    <form action="" method="">
+    <form action="/insertSolicitud/{{loguser}}" method="POST">
+      {%for persona in personal %}
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Autor</span>
-        <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="Paloma" disabled>
+        <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{persona.1}}" disabled>
       </div>
+      
 
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Departamento</span>
-        <input type="text" name="txtdomicilio" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="Produccion" disabled>
-
+        <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{persona.3}}" disabled>
+      {%endfor%}
         <span class="input-group-text" id="basic-addon3">Fecha</span>
-        <input type="text" name="txtdomicilio" class="form-control" id="basic-url" aria-describedby="basic-addon3" >
+        <input type="date" name="txtfecha" class="form-control" id="basic-url" aria-describedby="basic-addon3" >
       </div>
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Clasificacion</span>
-        <input type="text" name="txtdomicilio" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+        <input type="text" name="txtclasificacion" class="form-control" id="basic-url" aria-describedby="basic-addon3">
       </div>
 
       <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon3">Detalles</span>
-          <input type="text" name="txtdomicilio" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+          <input type="text" name="txtdetalles" class="form-control" id="basic-url" aria-describedby="basic-addon3">
       </div>   
       
       <div class="input-group">
         <div class="card-footer text-muted">
             <button class="btn btn-success" type="submit">Guardar</button>
-            <a href="/adminSolicitud" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+            <a href="/adminSolicitud/{{loguser}}" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
         </div>
       </div>
       </form>

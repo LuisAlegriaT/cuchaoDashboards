@@ -25,44 +25,47 @@
                     </div>
                     <div class="card-body">
                         <form class="row g-3">
+                            {%for aux in consultaAuxi%}
                             <div class="input-group mb-1">
                                 <span class="input-group-text" id="basic-addon3" style="background-color: white;">Nombre</span>
-                                <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="Paloma" disabled>
+                                <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{aux.3}}" disabled>
                             </div>
 
                             <div class="input-group mb-1">
                                 <span class="input-group-text" style="background-color: white;" id="basic-addon3">Departamento</span>
-                                <input type="text" name="txtdepartamento"  class="form-control" id="basic-url" aria-describedby="basic-addon3" value="Produccion" disabled>
+                                <input type="text" name="txtdepartamento"  class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{aux.1}}" disabled>
                         
                                 <span class="input-group-text" id="basic-addon3" style="background-color: white;" id="basic-addon3">Tipo de empleado</span>
                                 <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
-                                    value="Cliente" disabled>
+                                    value="{{aux.11}}" disabled>
                             </div>
 
                             <div class="input-group mb-1">
                                 <span class="input-group-text" style="background-color: white;" id="basic-addon3">Direccion</span>
                                 <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
-                                    value="El Colorado" disabled>
+                                    value="{{aux.6}}" disabled>
                             
                                 <span class="input-group-text" id="basic-addon3" style="background-color: white;" id="basic-addon3">Telefono</span>
                                 <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
-                                    value="4424874960" disabled>
+                                    value="{{aux.8}}" disabled>
                             </div>
                             <div class="input-group mb-1">
                                 <span class="input-group-text" style="background-color: white;" id="basic-addon3">Correo</span>
                                 <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
-                                    value="paloma@macuindash.com" disabled>
+                                    value="{{aux.4}}" disabled>
                                 
                                 <span class="input-group-text" style="background-color: white;" id="basic-addon3">Contraseña</span>
                                 <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
-                                    value="romero123" disabled>
+                                    value="{{aux.5}}" disabled>
                         
                             </div>
                             
+                            {%endfor%}
                             <div class="card-body" style="color: white; text-align: right" >
-                                <a href="/" class="btn" style="color: white; background-color: #F5B041;">Actualizar</a>
+                                <a href="/editarPerfilCliente/{{loguser}}" class="btn" style="color: white; background-color: #F5B041;">Actualizar</a>
                                 
                             </div>
+                            
                         </form>
                     </div>
                 </div>

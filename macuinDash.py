@@ -1,8 +1,10 @@
 #importar el framework 
 from colorama import Cursor
-from flask import Flask, render_template, request ,redirect,url_for,flash, session
+from flask import Flask, render_template, request ,redirect,url_for,flash, session, make_response
 from flask_mysqldb import MySQL
 from flask_session import Session
+from io import BytesIO
+
 
 
 
@@ -117,6 +119,9 @@ def adminClandAux(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo')
     consulta = cursor.fetchall()
+
+
+
     return render_template('adminClandAux.html', usuario=consulta, loguser=loguser)
 
 @app.route('/loginCrear/<string:loguser>')
@@ -139,11 +144,12 @@ def crearPersonal(loguser):
         vtelefono= request.form['txttelefono']
         vtipo= request.form['txttipo']
         vpass= request.form['txtpass']
-        print(vnombre,vmail,vdomicilio,vdepartamento,vtelefono,vtipo)
+        vimagen= request.form['txtimagen']
+        print(vnombre,vmail,vdomicilio,vdepartamento,vtelefono, vimagen,vtipo)
 
         cursor=mysql.connection.cursor()
-        cursor.execute('insert into users(nombre ,mail,pass, domicilio, departamento_id ,telefono, tipoId)values (%s,%s,%s,%s,%s,%s,%s)', 
-        (vnombre,vmail,vpass, vdomicilio, vdepartamento,vtelefono,vtipo)) #%s son para las cadenas
+        cursor.execute('insert into users(nombre ,mail,pass, domicilio, departamento_id ,telefono, image, tipoId)values (%s,%s,%s,%s,%s,%s,%s,%s)', 
+        (vnombre,vmail,vpass, vdomicilio, vdepartamento,vtelefono,vimagen,vtipo)) #%s son para las cadenas
         mysql.connection.commit()
     
     flash('Personal almacenado en la BD')
@@ -279,16 +285,16 @@ def ComentarioAuxiliar(ticket,loguser):
     print(ticket)
     return render_template('ComentarioAuxiliar.html', ticket1=data,ticket=ticket ,loguser=loguser)
 
-@app.route('/insertComentario/<ticket>/<string:loguser>',methods=['POST'])
-def insertComentario(ticket,loguser):
+@app.route('/insertComentarioA/<ticket>/<string:loguser>',methods=['POST'])
+def insertComentarioA(ticket,loguser):
   if request.method=='POST':
         #ticket_id=ticket  
-        comentarioA= request.form['txtComentarioA'] 
+        comentariosA= request.form['txtComentarioA'] 
         print(loguser)
         print(ticket)
-        print(comentarioA)
+        print(comentariosA)
         cursor=mysql.connection.cursor()
-        cursor.execute('UPDATE ticket SET comentariosAux = %s WHERE id_ticket = %s',(comentarioA, ticket))
+        cursor.execute('INSERT INTO comentariosAuxiliar (comentarioA , ticketAuxiliar) VALUES (%s,%s)',(comentariosA, ticket))
         mysql.connection.commit()
         return redirect(url_for('AdminTickets', loguser=loguser))
 
@@ -310,7 +316,7 @@ def insertComentarioC(ticket,loguser):
         print(ticket)
         print(comentarioC)
         cursor=mysql.connection.cursor()
-        cursor.execute('UPDATE ticket SET comentariosCliente = %s WHERE id_ticket = %s',(comentarioC, ticket))
+        cursor.execute('INSERT INTO comentariosCliente(comentarioC, ticketCliente) VALUES (%s,%s)',(comentarioC, ticket))
         mysql.connection.commit()
         return redirect(url_for('AdminTickets',loguser=loguser))
 

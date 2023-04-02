@@ -38,6 +38,7 @@
     <div class="container">
         <div class="row">
             {%for usu in usuario%}
+            
             <div class="col">
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: #4D64A4;">
@@ -46,7 +47,7 @@
                     <div class="card-body">
                         <label class="card-title">{{usu.1}}</label><br>
                         <label class="card-text">{{usu.4}}</label><br>
-                        <label for="">{{usu.11}}</label>
+                        <label class="card-text">{{usu.9}}</label><br>                        
                     </div>
                     <div class="card-footer text-muted">
                         <a href="/editarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-danger">Actualizar</a>

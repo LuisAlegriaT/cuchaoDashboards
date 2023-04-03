@@ -414,7 +414,31 @@ def ticketsAuxiliar(loguser):
     cur= mysql.connection.cursor()
     cur.execute('SELECT users.nombre, ticket.fecha, ticket.estatus, departamento.nombre_departamento, ticket.id_ticket, ticket.detalle FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',[loguser])
     data=cur.fetchall()
-    return render_template('misTickets.html',loguser=loguser, misTickets=data) 
+    return render_template('misTickets.html',loguser=loguser, misTickets=data)
+
+@app.route('/ComentarioACliente/<string:loguser>/<string:id_ticket>')
+def ComentarioACliente(loguser, id_ticket):
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT users.nombre FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento  WHERE ticket.id_ticket = %s',[id_ticket])
+    data=cur.fetchall()
+    conexion= mysql.connection.cursor()
+    conexion.execute('SELECT ticket.user_idCliente, ticket.detalle, ticket.estatus, users.nombre , comentarioscliente.comentarioC FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN comentarioscliente ON ticket.id_ticket = comentarioscliente.ticketCliente INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux WHERE ticketaux.userAux_id = %s',[loguser])
+    tablas=conexion.fetchall()
+
+    return render_template('auxComentarioC.html',loguser=loguser, data= data, ticket=id_ticket, tablas = tablas) 
+
+@app.route('/insertAuxComentarioC/<string:ticket>/<string:loguser>',methods=['POST'])
+def insertAuxComentarioC(ticket,loguser):
+  if request.method=='POST':
+        #ticket_id=ticket  
+        comentarioC= request.form['txtComentarioC'] 
+        print(loguser)
+        print(ticket)
+        print(comentarioC)
+        cursor=mysql.connection.cursor()
+        cursor.execute('INSERT INTO comentariosCliente(comentarioC, ticketCliente) VALUES (%s,%s)',(comentarioC, ticket))
+        mysql.connection.commit()
+        return redirect(url_for('ticketsAuxiliar', loguser=loguser))
 
 
 

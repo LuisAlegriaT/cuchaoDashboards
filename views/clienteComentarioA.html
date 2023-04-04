@@ -27,7 +27,7 @@
 
                     <div class="card-body">
 
-                        <form class="row g-3" action="/insertAuxComentarioC/{{ticket}}/{{loguser}}" method="POST">
+                        <form class="row g-3" action="/insertClienteComentarioA/{{ticket}}/{{loguser}}" method="POST">
                             {%for tick in data%}
                             <div class="col-md-6">
                                 <label for="inputEmail4" class="form-label">Auxiliar</label>
@@ -37,14 +37,14 @@
 
                             <div class="col-md-6">
                                 <label for="inputPassword4" class="form-label">Comentario</label>
-                                <input type="text" class="form-control" id="inputPassword4" name="txtComentarioC">
+                                <input type="text" class="form-control" id="inputPassword4" name="txtComentarioA">
                             </div>
 
 
                             <div class="col-12">
                                 <button type="submit" class="btn "
                                     style="color: black; background-color: #F4D03F;">Enviar</button>
-                                <a href="/misTickets/{{loguser}}" type="submit" class="btn "
+                                <a href="/adminSolicitud/{{loguser}}" type="submit" class="btn "
                                     style="color: black; background-color: #CD6155;">Cancelar</a>
 
                             </div>
@@ -65,7 +65,7 @@
                 <table class="table">
                     <thead class="table text-center" style="color: white; background-color: #4D64A4;">
                         <tr>
-                            <th scope="col">CLIENTES</th>
+                            <th scope="col">AUXILIAR</th>
                             <th scope="col">COMETARIOS</th>
                             <th scope="col">DETALLES</th>
                             <th scope="col">ESTATUS</th>
@@ -74,10 +74,10 @@
                     <tbody>
                         {%for tabla in tablas%}
                         <tr>
-                            <td>{{tabla.3}}</td>
-                            <td>{{tabla.4}}</td>
+                            <td>{{tabla.0}}</td>
                             <td>{{tabla.1}}</td>
                             <td>{{tabla.2}}</td>
+                            <td>{{tabla.3}}</td>
 
                         </tr>
                         {%endfor%}

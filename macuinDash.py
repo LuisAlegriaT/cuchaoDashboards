@@ -480,7 +480,7 @@ def adminSolicitud(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id WHERE id= %s ', [loguser])
     consulta = cursor.fetchall()
-    return render_template('adminSolicitud.html', miSolicitud= consulta ,loguser = loguser)
+    return render_template('clienteSolicitud.html', miSolicitud= consulta ,loguser = loguser)
 
 @app.route('/crearSolicitud/<string:loguser>')
 def crearSolicitud(loguser):
@@ -511,9 +511,15 @@ def EliminarSolicitud(loguser, idSolicitud):
     flash('Solicitud Eliminada')
     return redirect(url_for('adminSolicitud',loguser=loguser))
 
-@app.route('/ComentariosCliente/<string:loguser>')
-def ComentariosCliente(loguser):
-    return render_template('clienteComentarios.html',loguser=loguser)
+@app.route('/ComentariosAuxiliar/<string:loguser>/<string:id_ticket>')
+def ComentariosAuxiliar(loguser, id_ticket):
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT users.nombre FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento  WHERE ticket.id_ticket = %s',[id_ticket])
+    data=cur.fetchall()
+    conexion= mysql.connection.cursor()
+    conexion.execute('SELECT ticket.user_idCliente, ticket.detalle, ticket.estatus, users.nombre , comentarioscliente.comentarioC FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN comentarioscliente ON ticket.id_ticket = comentarioscliente.ticketCliente INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux WHERE ticket.user_idCliente = %s',[loguser])
+    tablas=conexion.fetchall()
+    return render_template('clienteComentarioA.html',loguser=loguser, data= data, ticket=id_ticket, tablas = tablas)
 
 
 

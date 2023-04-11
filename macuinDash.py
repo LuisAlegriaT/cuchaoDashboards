@@ -119,9 +119,6 @@ def adminClandAux(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo')
     consulta = cursor.fetchall()
-
-
-
     return render_template('adminClandAux.html', usuario=consulta, loguser=loguser)
 
 @app.route('/loginCrear/<string:loguser>')
@@ -155,7 +152,7 @@ def crearPersonal(loguser):
     flash('Personal almacenado en la BD')
     return redirect(url_for('adminClandAux',loguser=loguser)) 
 
-@app.route('/editarPersonal/<string:loguser>/<string:id>')
+@app.route('/editarPersonal/<string:id>/<string:loguser>')
 def editarPersonal(id, loguser):
     cursor= mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo where id={0}'.format(id))
@@ -343,12 +340,16 @@ def asignarTicket(ticketSend,loguser):
         cursor=mysql.connection.cursor()
         cursor.execute('INSERT INTO ticketaux (ticket_idAux, userAux_id) VALUES (%s, %s)',(ticketSend, auxiliar))
         mysql.connection.commit()
+        
         return redirect(url_for('AdminTickets',loguser=loguser))
     
     #REPORTE
 @app.route('/Reportes/<string:loguser>')
 def Reportes(loguser):
-    return render_template('adminReporte.html',loguser=loguser)
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN ticketaux ON users.id = ticketaux.userAux_id ')
+    reporte = cursor.fetchall()
+    return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
 
 
 

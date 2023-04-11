@@ -35,9 +35,10 @@
       
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Departamento</span>
-        <select name="txtdepartamento" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{personal.1}}">
+        <select name="txtdepartamento" id="" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="">
           
-          {%for usu in usuario%}
+          <option disabled>{{personal.1}}</option>
+          {%for usu in usuario%}          
           <option value="{{usu.0}}">{{usu.1}}</option>
           {%endfor%}
         </select>

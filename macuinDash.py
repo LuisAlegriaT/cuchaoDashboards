@@ -1,9 +1,9 @@
 #importar el framework 
 from colorama import Cursor
-from flask import Flask, render_template, request ,redirect,url_for,flash, session, make_response
+from flask import Flask, render_template, request ,redirect,url_for,flash, session, make_response, send_file
 from flask_mysqldb import MySQL
 from flask_session import Session
-from io import BytesIO
+from reportlab.pdfgen import canvas
 
 
 
@@ -344,14 +344,26 @@ def asignarTicket(ticketSend,loguser):
         return redirect(url_for('AdminTickets',loguser=loguser))
     
     #REPORTE
-@app.route('/Reportes/<string:loguser>')
-def Reportes(loguser):
+@app.route('/AdminReportes/<string:loguser>')
+def AdminReportes(loguser):
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN ticketaux ON users.id = ticketaux.userAux_id ')
+    cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id ')
     reporte = cursor.fetchall()
     return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
 
 
+
+
+@app.route('/adminGenerarReporte')
+def adminGenerarReporte():
+    # Crear el archivo PDF
+    
+    
+    reporte_path = 'static/reportes/adminReporte.pdf'
+    # ...
+
+    # Retornar el archivo generado utilizando Flask send_file
+    return send_file(reporte_path, as_attachment=True)
 
 
 

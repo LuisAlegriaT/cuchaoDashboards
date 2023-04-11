@@ -52,26 +52,21 @@
                             <th scope="col">FECHA</th>
                         </tr>
                     </thead>
+                    
                     <tbody>
+                        {%for rep in reporte%}
                         <tr>
-                            <td>Luis</td>
-                            <td>Falla de impresora</td>
-                            <td>En proceso</td>
-                            <td>2</td>
-                            <td>Logistica</td>
-                            <td>Paloma</td>
-                            <td>23/02/23</td>
+                            <td>{{rep.1}}</td>
+                            <td>{{rep.2}}</td>
+                            <td>{{rep.3}}</td>
+                            <td>{{rep.4}}</td>
+                            <td>{{rep.5}}</td>
+                            <td>{{rep.6}}</td>
+                            <td>{{rep.7}}</td>
                         </tr>
-                        <tr>
-                            <td>Paloma</td>
-                            <td>Falla de red</td>
-                            <td>En proceso</td>
-                            <td>5</td>
-                            <td>Produccion</td>
-                            <td>Luis</td>
-                            <td>25/02/23</td>
-                        </tr>
+                        {%endfor%}
                     </tbody>
+                    
                 </table>
             </div>
            
@@ -79,7 +74,7 @@
     </div>
     <br>
     <div class="btn-group-sm col-md-2" role="group" aria-label="Basic mixed styles example">
-        <button class="btn btn-outline-warning" type="submit">Reporte en PDF</button>
+        <a class="btn btn-outline-warning" href="/adminGenerarReporte" type="submit">Reporte en PDF</a>
     </div>
     
 

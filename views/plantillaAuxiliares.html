@@ -12,16 +12,16 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-dark  fixed-top " style="background-color: MidnightBlue;">
         <div class="container-fluid">
           <a class="navbar-brand" href="/perfilAuxiliar/{{loguser}}">Macuin Dashboards</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+          <div class="offcanvas offcanvas-end "style="background-color: MidnightBlue;" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
             <div class="offcanvas-header">
               {%for tip in tipo%}
-              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Bienvenido {{tip}}</h5>
+              <h5 class="offcanvas-title text-light" id="offcanvasDarkNavbarLabel">Bienvenido {{tip}}</h5>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               {%endfor%}
             </div>
@@ -40,19 +40,19 @@
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Acciones
                   </a>
-                  <ul class="dropdown-menu dropdown-menu-dark">
-                    <li><a class="dropdown-item" href="/logout">Cerrar Sesion</a></li>
-                    <li><a class="dropdown-item" href="#">Configuración</a></li>
+                  <ul class="dropdown-menu dropdown-menu-dark"  style="background-color: MidnightBlue; ">
+                    <li><a class="dropdown-item  text-light" href="/logout">Cerrar Sesion</a></li>
+                    <li><a class="dropdown-item  text-light" href="#">Configuración</a></li>
                     <li>
                       <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    <li><a class="dropdown-item  text-light" href="#">Something else here</a></li>
                   </ul>
                 </li>
               </ul>
               <form class="d-flex mt-3" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-success" type="submit">Search</button>
+                <button class="btn btn-light text-dark" type="submit">Search</button>
               </form>
             </div>
           </div>

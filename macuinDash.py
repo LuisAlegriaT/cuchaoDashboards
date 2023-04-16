@@ -83,16 +83,23 @@ def login():
             
             #-----------Administradores
             if(account[0] == 1 and account[1] == usuario and account[2] == pas):
+                a = 'Bienvenido ' + account[1]
+                flash(a)
                 return redirect(url_for('adminClandAux',loguser=userlog)) # vista Admin
               
             #-----------Auxiliares
             
             if (account[0] == 2 and account[1] == usuario and account[2] == pas):
+                a = 'Bienvenido ' + account[1]
+                flash(a)
                 return redirect(url_for('perfilAuxiliar',loguser=userlog)) # Vista Auxiliar
           
             #-----------Clientes
             if(account[0] == 3 and account[1] == usuario and account[2] == pas):
+                a = 'Bienvenido ' + account[1]
+                flash(a)
                 return redirect(url_for('perfilCliente',loguser=userlog)) # vista clientes
+        
                               
         else:
             flash('Datos incorrectos')
@@ -117,9 +124,42 @@ def logout():
 @app.route('/adminClandAux/<string:loguser>')
 def adminClandAux(loguser):
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo')
+    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo ')
     consulta = cursor.fetchall()
     return render_template('adminClandAux.html', usuario=consulta, loguser=loguser)
+
+    #BUSQUEDA DE PERSONAL
+
+@app.route('/adminClandBusqueda/<string:loguser>', methods=['POST'])
+def adminClandBusqueda(loguser):
+    if request.method == 'POST':
+        search= request.form['search']
+        print(search)
+        cursor=mysql.connection.cursor()
+        
+        cursor.execute("""
+        SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE departamento.nombre_departamento  LIKE %s
+        UNION
+        SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.nombre LIKE %s
+        UNION
+        SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE tipousers.tipoUsuario LIKE %s
+        UNION
+        SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.mail LIKE %s
+        UNION
+        SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.domicilio LIKE %s
+        """, ('%' + search + '%', '%' + search + '%', '%' + search + '%', '%' + search + '%', '%' + search + '%'))
+
+        # Obtener los resultados de la búsqueda
+        resultados = cursor.fetchall()
+
+        # Renderizar una plantilla con los resultados
+        return render_template('adminClandBusqueda.html', usuario=resultados,  loguser=loguser)
+    else: 
+        return redirect(url_for('adminClandAux',loguser=loguser)) 
+
+
+
+        ##PERSONAL
 
 @app.route('/loginCrear/<string:loguser>')
 def loginCrear(loguser):
@@ -203,6 +243,27 @@ def AdminDepa(loguser):
     consulta = cursor.fetchall()
     return render_template('adminDepartamentos.html', departamento=consulta, loguser=loguser)
 
+        #BUSQUEDA DE DEPARTAMENTOS
+@app.route('/adminDepartamentosBusqueda/<string:loguser>', methods=['POST'])
+def adminDepartamentosBusqueda(loguser):
+    if request.method == 'POST':
+        buscar= request.form['buscar']
+        print(buscar)
+        cursor=mysql.connection.cursor()
+        
+        cursor.execute("""SELECT * FROM departamento WHERE nombre_departamento  LIKE %s
+        UNION 
+        SELECT * FROM departamento WHERE id_departamento  LIKE %s""",('%' + buscar + '%', '%' + buscar + '%'))
+
+        # Obtener los resultados de la búsqueda
+        resultados = cursor.fetchall()
+
+        # Renderizar una plantilla con los resultados
+        return render_template('adminDepartamentosBusqueda.html', departamento=resultados,  loguser=loguser)
+    else: 
+        return redirect(url_for('AdminDepa',loguser=loguser)) 
+
+
 
             #INSERTAR
 @app.route('/CrearDepartamentos/<string:loguser>')
@@ -265,6 +326,35 @@ def AdminTickets(loguser):
     consulta = cursor.fetchall()
     return render_template('adminTickets.html', ticket=consulta, loguser = loguser)
 
+    #BUSCAR TICKET
+@app.route('/adminTicketsBusqueda/<string:loguser>', methods=['POST'])
+def adminTicketsBusqueda(loguser):
+    if request.method == 'POST':
+        buscar= request.form['buscar']
+        print(buscar)
+        cursor=mysql.connection.cursor()
+        
+        cursor.execute("""
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.fecha LIKE %s
+        UNION 
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.detalle LIKE %s
+        UNION
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.estatus LIKE %s
+        UNION
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.clasificacion LIKE %s
+        UNION
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE users.nombre LIKE %s
+        """,('%' + buscar + '%', '%' + buscar + '%', '%' + buscar + '%','%' + buscar + '%', '%' + buscar + '%'))
+
+        # Obtener los resultados de la búsqueda
+        resultados = cursor.fetchall()
+
+        # Renderizar una plantilla con los resultados
+        return render_template('adminTicketsBusqueda.html', ticket=resultados,  loguser=loguser)
+    else: 
+        return redirect(url_for('AdminTickets',loguser=loguser)) 
+
+
 @app.route('/adminComentario/<id_ticket>/<string:loguser>')
 def AdminComentario(id_ticket,loguser): 
     id_t=id_ticket   
@@ -320,6 +410,8 @@ def insertComentarioC(ticket,loguser):
 
         #ASIGNAR AUXILIAR
 
+#ASIGNAR AUXILIAR
+
 @app.route('/adminAsignar/<id_ticket>/<string:loguser>')
 def adminAsignar(id_ticket,loguser):
     ticketRecived=id_ticket
@@ -333,15 +425,32 @@ def adminAsignar(id_ticket,loguser):
 
 @app.route('/asignarTicket/<ticketSend>/<string:loguser>', methods=['POST'])
 def asignarTicket(ticketSend,loguser):
-    if request.method=='POST':
-        print(ticketSend)
-        auxiliar=request.form['txtAuxiliar']
-        print(auxiliar)
-        cursor=mysql.connection.cursor()
-        cursor.execute('INSERT INTO ticketaux (ticket_idAux, userAux_id) VALUES (%s, %s)',(ticketSend, auxiliar))
-        mysql.connection.commit()
-        
+    cursor1=mysql.connection.cursor()
+    cursor1.execute('SELECT estatus FROM ticket WHERE id_ticket = %s',(ticketSend))
+    mysql.connection.commit()
+    cursores = cursor1.fetchone()
+    print(cursores[0])
+
+    if ( cursores[0] == "Completado" or cursores[0] == "Nunca solucionado" or cursores[0] == "Cancelado" or cursores[0] == "Asignado" or cursores[0] == "Proceso"  ):
+        a = " Tu ticket no puede ser modificado porque ya esta  "+ cursores[0]
+                
+        flash(a)
         return redirect(url_for('AdminTickets',loguser=loguser))
+    else :
+        estatus= 'Asignado'
+        status=mysql.connection.cursor()
+        status.execute('update ticket set estatus=%s  where id_ticket=%s',(estatus, ticketSend))
+        mysql.connection.commit()
+        if request.method=='POST':
+            print(ticketSend)
+            auxiliar=request.form['txtAuxiliar']
+            print(auxiliar)
+            cursor=mysql.connection.cursor()
+            cursor.execute('INSERT INTO ticketaux (ticket_idAux, userAux_id) VALUES (%s, %s)',(ticketSend, auxiliar))
+            mysql.connection.commit()
+        flash('Tu ticket ya fue asignado')   
+        return redirect(url_for('adminAsignar',id_ticket= ticketSend,loguser=loguser))
+    
     
     #REPORTE
 @app.route('/AdminReportes/<string:loguser>')
@@ -409,7 +518,18 @@ def Seguimiento(loguser, id_ticket):
 
 @app.route('/SeguimientoEstatus/<string:id>/<string:loguser>',methods =['POST'])
 def SeguimientoEstatus(id, loguser):
-    if request.method=='POST':
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT estatus FROM ticket WHERE id_ticket = %s',(id))
+    mysql.connection.commit()
+    cursores = cursor.fetchone()
+    print(cursor)
+    print(cursores[0])
+    if ( cursores[0] == "Completado" or cursores[0] == "Nunca solucionado" or cursores[0] == "Cancelado" ):
+        a = " Tu ticket no puede ser modificado porque ya esta  "+ cursores[0]
+        
+        flash(a)
+    else:
+        
         estatus= request.form['txtestatus']
         print(loguser)
 
@@ -417,8 +537,10 @@ def SeguimientoEstatus(id, loguser):
         cursor.execute('update ticket set estatus=%s  where id_ticket=%s',(estatus, id))
         mysql.connection.commit()
 
-    flash('Se ha guardado correctamente el estatus del ticket')
+        flash('Se ha guardado correctamente el estatus del ticket')
     return redirect(url_for('ticketsAuxiliar',loguser=loguser))
+
+    
 
 
 
@@ -488,8 +610,8 @@ def actualizarPerfilCliente(loguser):
     flash('Tu Perfil se actualizo en la BD')
     return redirect(url_for('perfilCliente',loguser=loguser))
 
-@app.route('/adminSolicitud/<string:loguser>')
-def adminSolicitud(loguser):
+@app.route('/clienteSolicitud/<string:loguser>')
+def clienteSolicitud(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id WHERE id= %s ', [loguser])
     consulta = cursor.fetchall()
@@ -514,15 +636,50 @@ def insertarSolicitud(loguser):
         cursor=mysql.connection.cursor()
         cursor.execute('INSERT INTO ticket (fecha,detalle, clasificacion,user_idCliente) VALUES (%s, %s,%s, %s)',(fecha, detalles, clasificacion, loguser))
         mysql.connection.commit()
-        return redirect(url_for('adminSolicitud', loguser = loguser ))
+        return redirect(url_for('clienteSolicitud', loguser = loguser ))
 
 @app.route('/EliminarSolicitud/<string:loguser>/<string:idSolicitud>')
 def EliminarSolicitud(loguser, idSolicitud):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM ticket  WHERE id_ticket= {0}'.format(idSolicitud))
+    estatus=mysql.connection.cursor()
+    estatus.execute('SELECT estatus FROM ticket WHERE id_ticket = %s',(idSolicitud))
     mysql.connection.commit()
-    flash('Solicitud Eliminada')
-    return redirect(url_for('adminSolicitud',loguser=loguser))
+    status = estatus.fetchone()
+    print(estatus)
+    print(status[0])
+    if (status[0] == "Proceso" or status[0] == "Asignado" or status[0] == "Completado" or status[0] == "Nunca solucionado" or status[0] == "Cancelado" ):
+        a = " Tu ticket no puede ser cancelado porque ya esta en "+ status[0]
+        
+        flash(a)
+    else:
+        valor = "Cancelado"  
+        cursor=mysql.connection.cursor()
+        cursor.execute('UPDATE ticket SET estatus = %s WHERE ticket.id_ticket = %s',(valor,idSolicitud))
+        mysql.connection.commit()
+        flash('Tu Ticket fue cancelado')
+    return redirect(url_for('clienteSolicitud',loguser=loguser))
+
+@app.route('/NuncaSolicitud/<string:loguser>/<string:idSolicitud>')
+def NuncaSolicitud(loguser, idSolicitud):
+    estatus=mysql.connection.cursor()
+    estatus.execute('SELECT estatus FROM ticket WHERE id_ticket = %s',(idSolicitud))
+    mysql.connection.commit()
+    status = estatus.fetchone()
+    print(estatus)
+    print(status[0])
+    if (status[0] == "Nunca solucionado" or status[0] == "Cancelado" ):
+        a = " Tu ticket no puede ser modificado porque ya esta en "+ status[0]
+        
+        flash(a)
+    else:
+        valor = "Nunca solucionado"  
+        cursor=mysql.connection.cursor()
+        cursor.execute('UPDATE ticket SET estatus = %s WHERE ticket.id_ticket = %s',(valor,idSolicitud))
+        mysql.connection.commit()
+        flash('Tu Ticket nunca fue solucionado')
+    return redirect(url_for('clienteSolicitud',loguser=loguser))
+
+
+        
 
 @app.route('/ComentariosAuxiliar/<string:loguser>/<string:id_ticket>')
 def ComentariosAuxiliar(loguser, id_ticket):
@@ -545,7 +702,7 @@ def insertClienteComentarioA(ticket,loguser):
         cursor=mysql.connection.cursor()
         cursor.execute('INSERT INTO comentariosAuxiliar(comentarioA, ticketAuxiliar) VALUES (%s,%s)',(comentarioA, ticket))
         mysql.connection.commit()
-        return redirect(url_for('adminSolicitud', loguser=loguser))
+        return redirect(url_for('clienteSolicitud', loguser=loguser))
 
 
 

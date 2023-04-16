@@ -10,7 +10,7 @@
 {%block body%}
 <div class="container">
 
-    <div class="display-2 text-primary text-center mt-5 mb-5"> Bienvenido a Macuin Dashboards </div>
+    <br>
     {%with mensaje = get_flashed_messages() %}
     {%if mensaje%}
     <ul class=flashes>
@@ -28,30 +28,31 @@
     {%endwith%}
 
     <div>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
-            <a href="/loginCrear/{{loguser}}" class="btn btn-outline-success">Nuevo</a>
-          </form>
+        <form class="d-flex" method="post" action="/adminClandBusqueda/{{loguser}}">
+            <input class="form-control me-2" type="search" name="search"  placeholder="Buscar..." aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Buscar</button>
+            <a href="/loginCrear/{{loguser}}" class="btn btn-outline-primary">Nuevo</a>
+        </form>
     </div><br>
 
     <div class="container">
         <div class="row">
+            
             {%for usu in usuario%}
             
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue;">
                         {{usu.3}}
                     </div>
                     <div class="card-body">
                         <label class="card-title">{{usu.1}}</label><br>
                         <label class="card-text">{{usu.4}}</label><br>
-                        <label class="card-text">{{usu.9}}</label><br>                        
+                        <label class="card-text">{{usu.12}}</label><br>                        
                     </div>
                     <div class="card-footer text-muted">
-                        <a href="/editarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-danger">Actualizar</a>
-                        <a href="/eliminarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-warning">Eliminar</a>
+                        <a href="/editarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-outline-primary">Actualizar</a>
+                        <a href="/eliminarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-outline-primary">Eliminar</a>
                       </div> 
                 </div>
                 <br>

@@ -1,0 +1,68 @@
+
+<head>
+    <title>
+        Vista Admin
+    </title>
+</head>
+
+
+{%extends 'plantilla.html'%}
+{%block body%}
+<div class="container">
+
+    <br>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    <ul class=flashes>
+        {%for msj in mensaje%}
+    
+        <div class="alert alert-warning alert-dismissible mb-3" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ msj }}
+        </div>
+    
+    </ul>
+    
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+    <div>
+        <form class="d-flex" >
+            
+            <a href="/adminClandAux/{{loguser}}" class="btn btn-outline-primary">Regresar</a>
+        </form>
+    </div><br>
+
+    
+<div class="container">
+    <div class="row">
+
+        {%for usu in usuario%}
+
+        <div class="col">
+            <div class="card text-center">
+                <div class="card-header" style="color: white; background-color: MidnightBlue;">
+                    {{usu.3}}
+                </div>
+                <div class="card-body">
+                    <label class="card-title">{{usu.1}}</label><br>
+                    <label class="card-text">{{usu.4}}</label><br>
+                    <label class="card-text">{{usu.12}}</label><br>
+                </div>
+                <div class="card-footer text-muted">
+                    <a href="/editarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-outline-primary">Actualizar</a>
+                    <a href="/eliminarPersonal/{{usu.2}}/{{loguser}}" class="btn btn-outline-primary">Eliminar</a>
+                </div>
+            </div>
+            <br>
+        </div>
+        {%endfor%}
+
+        
+
+
+    </div>
+</div>
+
+{%endblock%}

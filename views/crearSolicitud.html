@@ -1,3 +1,9 @@
+<head>
+  <title>
+    Vista Cliente
+  </title>
+</head>
+
 {%extends 'plantillaCliente.html'%}
 {%block body%}
 <div class="container">
@@ -45,8 +51,8 @@
       
       <div class="input-group">
         <div class="card-footer text-muted">
-            <button class="btn btn-success" type="submit">Guardar</button>
-            <a href="/adminSolicitud/{{loguser}}" class="btn " style="color: black; background-color: #CD6155;">Cancelar</a>
+            <button class="btn btn-outline-primary" type="submit">Guardar</button>
+            <a href="/adminSolicitud/{{loguser}}" class="btn btn-outline-primary">Cancelar</a>
         </div>
       </div>
       </form>

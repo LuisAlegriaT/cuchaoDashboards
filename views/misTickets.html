@@ -1,3 +1,9 @@
+<head>
+    <title>
+        Vista Auxiliar
+    </title>
+</head>
+
 {%extends 'plantillaAuxiliares.html'%}
 {%block body%}
 <div class="container">
@@ -27,7 +33,7 @@
             {%for myticket in misTickets%}
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue;">
                         TICKETS
                     </div>
             
@@ -61,8 +67,8 @@
                     
                     <div class="card-body" style="color: white; background-color: #EEEEEE;">
                         
-                        <a href="/ComentarioACliente/{{loguser}}/{{myticket.4}}" class="btn" style="color: white; background-color: #F5B041;">Comentario a Cliente</a>
-                        <a href="/Seguimiento/{{loguser}}/{{myticket.4}}" class="btn" style="color: white; background-color: #41d4f5;">Seguimiento</a>
+                        <a href="/ComentarioACliente/{{loguser}}/{{myticket.4}}" class="btn btn-outline-primary">Comentario a Cliente</a>
+                        <a href="/Seguimiento/{{loguser}}/{{myticket.4}}" class="btn btn-outline-primary">Seguimiento</a>
                     </div>
                 
                 </div>

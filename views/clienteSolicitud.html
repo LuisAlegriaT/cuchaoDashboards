@@ -1,3 +1,9 @@
+<head>
+    <title>
+        Vista Cliente
+    </title>
+</head>
+
 {%extends 'plantillaCliente.html'%}
 {%block body%}
 <div class="container">
@@ -30,17 +36,23 @@
             {%for miSoli in miSolicitud %}
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: green;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue;">
                         <label for="inputEmail4" class="form-label">{{miSoli.1}}</label>
                     </div>
                     <div class="card-body">
-                        <label for="inputEmail4" class="form-label">{{miSoli.2}}</label>
+                        <label for="inputEmail4" class="form-label">{{miSoli.2}}</label><br>
+                        <label for="inputEmail4" class="form-label">{{miSoli.3}}</label>
                         
                     </div>
             
                     <div class="card-footer text-muted">
-                        <a href="/ComentariosAuxiliar/{{loguser}}/{{miSoli.0}}" class="btn btn-danger">Comentario</a>
-                        <a href="/EliminarSolicitud/{{loguser}}/{{miSoli.0}}" class="btn btn-danger">Cancelar</a>
+                        
+                        <a href="/ComentariosAuxiliar/{{loguser}}/{{miSoli.0}}" class="btn btn-outline-primary">Comentario</a>
+
+                        <a href="/EliminarSolicitud/{{loguser}}/{{miSoli.0}}" 
+                        class="btn btn-outline-primary">Cancelar</a>
+
+                        <a href="/NuncaSolicitud/{{loguser}}/{{miSoli.0}}" class="btn btn-outline-primary">Nunca solucionado</a>
                     </div>
                 </div>
                 <br>

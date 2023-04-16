@@ -1,5 +1,5 @@
 <head>
-    <title> Vista clientes </title>
+    <title> Vista Admin </title>
     
     
     </head>
@@ -22,11 +22,11 @@
     {%endif%}
     {%endwith%}
     <div>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
+        <form class="d-flex" method="post" action="/adminDepartamentosBusqueda/{{loguser}}">
+            <input class="form-control me-2" type="search" name="buscar" placeholder="Buscar..." aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Buscar</button>
            
-            <a href="/CrearDepartamentos/{{loguser}}" class="btn btn-outline-success">Nuevo</a>
+            <a href="/CrearDepartamentos/{{loguser}}" class="btn btn-outline-primary">Nuevo</a>
           </form>
     </div><br>
 
@@ -37,13 +37,13 @@
             {%for depa in departamento%}
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue;">
                         {{depa.1}}
                     </div>
                     
                     <div class="card-footer text-muted">
-                        <a href="/ActualizarDepartamentos/{{depa.0}}/{{loguser}}" class="btn btn-danger">Actualizar</a>
-                        <a href="/EliminarDepartamentos/{{depa.0}}/{{loguser}}" class="btn btn-warning">Eliminar</a>
+                        <a href="/ActualizarDepartamentos/{{depa.0}}/{{loguser}}" class="btn btn-outline-primary">Actualizar</a>
+                        <a href="/EliminarDepartamentos/{{depa.0}}/{{loguser}}" class="btn btn-outline-primary">Eliminar</a>
                     </div> 
                 </div>
                 <br>

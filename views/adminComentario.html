@@ -1,3 +1,9 @@
+<head>
+    <title>
+        Vista Admin
+    </title>
+</head>
+
 {%extends 'plantilla.html'%}
 {%block body%}
 <div class="container">
@@ -20,17 +26,17 @@
             <div class="col">
 
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue;">
                        COMENTARIOS
                     </div>
                     
                     <div class="card-body" >
                         <form action="/ComentarioCliente/{{ticket.0}}/{{loguser}}" method="POST">
-                            <button type="submit" class="btn " style="color: black; background-color:#C39BD3;">Cliente</button>
+                            <button type="submit" class="btn btn-outline-primary">Cliente</button>
                         </form>
                         
                         <form action="/ComentarioAuxiliar/{{ticket.0}}/{{loguser}}" method="POST">
-                            <button type="submit" class="btn " style="color: black; background-color:#C39BD3;">Auxiliar</button>
+                            <button type="submit" class="btn btn-outline-primary">Auxiliar</button>
                         </form>
                         
                     </div>

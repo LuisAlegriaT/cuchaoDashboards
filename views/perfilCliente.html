@@ -1,6 +1,13 @@
+<head>
+    <title>
+        Vista Cliente
+    </title>
+</head>
+
 {%extends 'plantillaCliente.html'%}
 {%block body%}
 <div class="container">
+    <br>
 
     {%with mensaje = get_flashed_messages() %}
     {%if mensaje%}
@@ -14,13 +21,13 @@
     {%endif%}
     {%endwith%}
 
-    <br>
+    
     <div class="container">
         <div class="row">
     
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue">
                        MI PERFIL
                     </div>
                     <div class="card-body">
@@ -62,7 +69,7 @@
                             
                             {%endfor%}
                             <div class="card-body" style="color: white; text-align: right" >
-                                <a href="/editarPerfilCliente/{{loguser}}" class="btn" style="color: white; background-color: #F5B041;">Actualizar</a>
+                                <a href="/editarPerfilCliente/{{loguser}}" class="btn btn-outline-primary" >Actualizar</a>
                                 
                             </div>
                             

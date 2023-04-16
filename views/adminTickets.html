@@ -1,3 +1,9 @@
+<head>
+    <title>
+        Vista Admin
+    </title>
+</head>
+
 {%extends 'plantilla.html'%}
 {%block body%}
 <div class="container">
@@ -14,10 +20,11 @@
     {%endfor%}
     {%endif%}
     {%endwith%}
+    
     <div>
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
+        <form class="d-flex" method="post" action="/adminTicketsBusqueda/{{loguser}}">
+            <input class="form-control me-2" type="search" name="buscar" placeholder="Buscar..." aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Buscar</button>
           </form>
     </div><br>
 
@@ -26,7 +33,7 @@
             {%for tick in ticket%}
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue">
                         TICKETS
                     </div>
                     
@@ -67,9 +74,9 @@
                     </div>
                     
                     
-                    <div class="card-body" style="color: white; background-color: #EEEEEE;">
-                        <a href="/adminAsignar/{{tick.0}}/{{loguser}}" class="btn" style="color: white; background-color: #17A589;">Asignar</a>
-                        <a href="/adminComentario/{{tick.0}}/{{loguser}}" class="btn" style="color: white; background-color: #F5B041;">Comentario</a>
+                    <div class="card-body" style="color: white; background-color: #f7f2f2;">
+                        <a href="/adminAsignar/{{tick.0}}/{{loguser}}" class="btn btn-outline-primary">Asignar</a>
+                        <a href="/adminComentario/{{tick.0}}/{{loguser}}" class="btn btn-outline-primary">Comentario</a>
                         
                     </div>
                 </div>

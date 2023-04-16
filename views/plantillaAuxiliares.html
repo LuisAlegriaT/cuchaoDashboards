@@ -20,10 +20,8 @@
           </button>
           <div class="offcanvas offcanvas-end "style="background-color: MidnightBlue;" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
             <div class="offcanvas-header">
-              {%for tip in tipo%}
-              <h5 class="offcanvas-title text-light" id="offcanvasDarkNavbarLabel">Bienvenido {{tip}}</h5>
+              <h5 class="offcanvas-title text-light" id="offcanvasDarkNavbarLabel">¿A donde vamos?</h5>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-              {%endfor%}
             </div>
             <div class="offcanvas-body">
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
@@ -43,17 +41,11 @@
                   <ul class="dropdown-menu dropdown-menu-dark"  style="background-color: MidnightBlue; ">
                     <li><a class="dropdown-item  text-light" href="/logout">Cerrar Sesion</a></li>
                     <li><a class="dropdown-item  text-light" href="#">Configuración</a></li>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item  text-light" href="#">Something else here</a></li>
+                    
                   </ul>
                 </li>
               </ul>
-              <form class="d-flex mt-3" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-light text-dark" type="submit">Search</button>
-              </form>
+              
             </div>
           </div>
         </div>

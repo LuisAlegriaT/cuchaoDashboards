@@ -1,3 +1,9 @@
+<head>
+    <title>
+        Vista Admin
+    </title>
+</head>
+
 {%extends 'plantilla.html'%}
 {%block body%}
 <div class="container">
@@ -20,7 +26,7 @@
 
             <div class="col">
                 <div class="card text-center">
-                    <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    <div class="card-header" style="color: white; background-color: MidnightBlue;">
                         DETALLE DE SEGUIMIENTO
                     </div>
                     <div class="card-body">
@@ -44,17 +50,15 @@
                                 <span class="input-group-text" id="basic-addon3">Estatus</span>
                                 <select name="txtestatus" id="" class="form-control" 
                                 id="basic-url" aria-describedby="basic-addon3" value="">
-                                    <option value="">Selección de estatus</option>
-                                    <option value="COMPLETADO">COMPLETADO</option>
-                                    <option value="EN PROCESO">EN PROCESO</option>
-                                    <option value="NUNCA SOLUCIONADO">NUNCA SOLUCIONADO</option>
-                                    <option value="CANCELADO POR CLIENTE">CANCELADO POR CLIENTE</option>     
+                                    <option value="{{ticket.3}}">{{ticket.3}}</option>
+                                    <option value="Completado">Completado</option>
+                                    <option value="Proceso">Proceso</option>     
                                 </select>
                                 
                             </div>
                             
 
-                            <div class="card-header" style="color: white; background-color: #4D64A4;">
+                            <div class="card-header" style="color: white; background-color: MidnightBlue;">
                                 DATOS CLIENTE
                             </div>
                             <div class="card-body">
@@ -72,8 +76,8 @@
                             </div>
                             
                             <div class="btn-group-sm col-md-2" role="group" aria-label="Basic mixed styles example">
-                                <button class="btn btn-outline-success" type="submit">Generar</button>
-                                <a href="/misTickets/{{loguser}}" class="btn btn-outline-danger"
+                                <button class="btn btn-outline-primary" type="submit">Generar</button>
+                                <a href="/misTickets/{{loguser}}" class="btn btn-outline-primary"
                                     type="submit">Regresar</a>
                             </div>
                             {%endfor%}

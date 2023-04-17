@@ -21,12 +21,9 @@
     {%endif%}
     {%endwith%}
     <div>
-        <form class="d-flex" method="post" action="/clienteSolicitudBusqueda/{{loguser}}">
-            <input class="form-control me-2" type="search" name="buscar" placeholder="Buscar..." aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Buscar</button>
-        
-           
-            <a href="/crearSolicitud/{{loguser}}" class="btn btn-outline-success">Nuevo</a>
+        <form class="d-flex">
+    
+            <a href="/clienteSolicitud/{{loguser}}" class="btn btn-outline-primary">Regresar</a>
         </form>
     </div><br>
 
@@ -34,7 +31,7 @@
 
     <div class="container">
         <div class="row">
-            {%for miSoli in miSolicitud %}
+            {%for miSoli in miSolicitud%}
             <div class="col">
                 <div class="card text-center">
                     <div class="card-header" style="color: white; background-color: MidnightBlue;">

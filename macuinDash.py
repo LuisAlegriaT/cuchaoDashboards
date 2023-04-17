@@ -541,7 +541,7 @@ def SeguimientoEstatus(id, loguser):
     return redirect(url_for('ticketsAuxiliar',loguser=loguser))
 
     
-
+        #TICKETS
 
 
 @app.route('/misTickets/<string:loguser>')
@@ -550,6 +550,45 @@ def ticketsAuxiliar(loguser):
     cur.execute('SELECT users.nombre, ticket.fecha, ticket.estatus, departamento.nombre_departamento, ticket.id_ticket, ticket.detalle FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',[loguser])
     data=cur.fetchall()
     return render_template('misTickets.html',loguser=loguser, misTickets=data)
+
+        #BUSQUEDA DE TICKETS
+
+
+@app.route('/auxiliarTicketsBusqueda/<string:loguser>', methods=['POST'])
+def auxiliarTicketsBusqueda(loguser):
+    if request.method == 'POST':
+        buscar= request.form['buscar']
+        print(buscar)
+        cursor=mysql.connection.cursor()
+        
+        cursor.execute("""
+        SELECT * FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticket.fecha LIKE %s 
+        AND ticketaux.userAux_id = %s
+        
+        UNION 
+        SELECT *  FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticket.detalle LIKE %s
+        AND ticketaux.userAux_id = %s
+        UNION
+        SELECT * FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticket.estatus LIKE %s
+        AND ticketaux.userAux_id = %s
+        UNION
+        SELECT *  FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticket.clasificacion LIKE %s
+        AND ticketaux.userAux_id = %s
+        UNION
+        SELECT * FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento  WHERE users.nombre LIKE %s  
+        AND ticketaux.userAux_id = %s
+        UNION
+        SELECT * FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento  WHERE departamento.nombre_departamento LIKE %s 
+        AND ticketaux.userAux_id = %s
+        """,('%' + buscar + '%', loguser , '%' + buscar + '%',loguser , '%' + buscar + '%', loguser,'%' + buscar + '%', loguser, '%' + buscar + '%', loguser , '%' + buscar + '%', loguser  ))
+
+        # Obtener los resultados de la búsqueda
+        resultados = cursor.fetchall()
+
+        # Renderizar una plantilla con los resultados
+        return render_template('auxiliarTicketsBusqueda.html', misTickets=resultados,  loguser=loguser)
+    else: 
+        return redirect(url_for('ticketsAuxiliar',loguser=loguser))
 
 @app.route('/ComentarioACliente/<string:loguser>/<string:id_ticket>')
 def ComentarioACliente(loguser, id_ticket):
@@ -610,12 +649,46 @@ def actualizarPerfilCliente(loguser):
     flash('Tu Perfil se actualizo en la BD')
     return redirect(url_for('perfilCliente',loguser=loguser))
 
+
+        #SOLICITUD
+
 @app.route('/clienteSolicitud/<string:loguser>')
 def clienteSolicitud(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id WHERE id= %s ', [loguser])
     consulta = cursor.fetchall()
     return render_template('clienteSolicitud.html', miSolicitud= consulta ,loguser = loguser)
+
+        #BUSQUEDA DE SOLICITUD
+
+@app.route('/clienteSolicitudBusqueda/<string:loguser>', methods=['POST'])
+def clienteSolicitudBusqueda(loguser):
+    if request.method == 'POST':
+        buscar= request.form['buscar']
+        print(buscar)
+        cursor=mysql.connection.cursor()
+        print(loguser)
+        
+        cursor.execute("""
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.fecha LIKE %s
+        AND ticket.user_idCliente = %s
+        UNION 
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.detalle LIKE %s
+        AND ticket.user_idCliente = %s 
+        UNION
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.estatus LIKE %s
+        AND ticket.user_idCliente = %s         
+        """,('%' + buscar + '%', loguser , '%' + buscar + '%',loguser , '%' + buscar + '%', loguser))
+
+        # Obtener los resultados de la búsqueda
+        resultados = cursor.fetchall()
+
+        # Renderizar una plantilla con los resultados
+        return render_template('clienteSolicitudBusqueda.html', miSolicitud=resultados,  loguser=loguser)
+    else: 
+        return redirect(url_for('clienteSolicitud',loguser=loguser))
+
+
 
 @app.route('/crearSolicitud/<string:loguser>')
 def crearSolicitud(loguser):

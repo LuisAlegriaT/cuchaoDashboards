@@ -1,9 +1,11 @@
 #importar el framework 
 from colorama import Cursor
-from flask import Flask, render_template, request ,redirect,url_for,flash, session, make_response, send_file
+from flask import Flask, render_template, request ,Response , redirect,url_for,flash, session, make_response, send_file
 from flask_mysqldb import MySQL
 from flask_session import Session
 from reportlab.pdfgen import canvas
+import base64
+
 
 
 
@@ -214,10 +216,11 @@ def actualizarPersonal(id, loguser):
         vdepartamento= request.form['txtdepartamento']
         vtelefono= request.form['txttelefono']
         vtipo= request.form['txttipo']
-        print(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id)
+        vimagen= request.form['txtimagen']
+        print(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,vimagen,id)
 
         cursor=mysql.connection.cursor()
-        cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s, departamento_id=%s ,telefono=%s ,tipoId=%s where id=%s',(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id))
+        cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s, departamento_id=%s ,telefono=%s ,image=%s,tipoId=%s where id=%s',(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,vimagen,id))
         mysql.connection.commit()
 
     flash('Personal se actualizo en la BD')
@@ -479,11 +482,35 @@ def adminGenerarReporte():
 ################################## PERFIL AUXILIAR #################################################
 @app.route('/perfilAuxiliar/<string:loguser>')
 def perfilAuxiliar(loguser):
-    cur= mysql.connection.cursor()
-    cur.execute('SELECT users.nombre, users.mail, users.domicilio, users.telefono, tipousers.tipoUsuario FROM users INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.id=%s',[loguser])
-    data=cur.fetchall()
-    print(data)
-    return render_template('perfilAuxiliar.html', loguser = loguser,myInfo=data)
+    try:
+        cur= mysql.connection.cursor()
+        cur.execute('SELECT users.nombre, users.mail, users.domicilio, users.telefono, tipousers.tipoUsuario FROM users INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.id=%s',[loguser])
+        data=cur.fetchall()
+        print(data)
+        cursor = mysql.connection.cursor()
+        # Obtener información de la imagen desde la base de datos
+        cursor.execute("SELECT nombre, image FROM users WHERE id = %s", (loguser,))
+        imagen = cursor.fetchone()
+        cursor.close()
+
+        if imagen:
+            # Obtener la imagen en formato binario desde la base de datos
+            imagen_binario = imagen[1]
+            # Codificar la imagen en base64
+            imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+
+            # Pasar la información de la imagen a la plantilla HTML
+            return render_template('perfilAuxiliar.html', loguser=loguser, myInfo=data, imagen_base64=imagen_base64)
+        else:
+            # Manejar caso si la imagen no existe
+            return 'Imagen no encontrada', 404
+    except Exception as e:
+        return str(e), 500
+
+
+
+
+    
 
 
 @app.route('/editarAuxiliar/<string:loguser>')
@@ -620,16 +647,35 @@ def insertAuxComentarioC(ticket,loguser):
 ################################## PERFIL CLIENTE #############################################3
 @app.route('/perfilCliente/<string:loguser>')
 def perfilCliente(loguser):
+    try: 
+        cursor1=mysql.connection.cursor()
+        cursor1.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
+        consulta = cursor1.fetchall()
+        cursor = mysql.connection.cursor()
+            # Obtener información de la imagen desde la base de datos
+        cursor.execute("SELECT nombre, image FROM users WHERE id = %s", (loguser,))
+        imagen = cursor.fetchone()
+        cursor1.close()
 
-    cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
-    consulta = cursor.fetchall()
-    return render_template('perfilCliente.html', consultaAuxi = consulta , loguser = loguser)
+        if imagen:
+            # Obtener la imagen en formato binario desde la base de datos
+            imagen_binario = imagen[1]
+            # Codificar la imagen en base64
+            imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
 
+            # Pasar la información de la imagen a la plantilla HTML
+            return render_template('perfilCliente.html', loguser=loguser, consultaAuxi = consulta, imagen_base64=imagen_base64)
+        else:
+            # Manejar caso si la imagen no existe
+            return 'Imagen no encontrada', 404
+    except Exception as e:
+        return str(e), 500
+    
 @app.route('/editarPerfilCliente/<string:loguser>')
 def editarPerfilCliente(loguser):
     cursor= mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
+
     consulta= cursor.fetchall()
     return render_template('actualizarPerfilCliente.html', personal= consulta[0] , loguser=loguser )
 

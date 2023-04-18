@@ -32,7 +32,16 @@
         </div>
 
         <form action="/actualizarPerfilCliente/{{personal.2}}" method="POST" class="card-body">
-
+          <div class="input-group mb-3 align-items-center justify-content-center">
+          
+            <img src="data:image/jpeg;base64,{{imagen_base64}}" width="100" height="100">
+            <br>
+            <div class="input-group mb-3 align-items-center justify-content-center">
+          
+              <a href="/clienteActualizarImagen/{{loguser}}" class="btn btn-outline-primary">Actualizar imagen</a>
+          
+            </div>
+          </div>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon3">Nombre</span>
             <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3"

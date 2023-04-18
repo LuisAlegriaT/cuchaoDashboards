@@ -32,8 +32,8 @@
                     </div>
                     <div class="card-body">
                         <form class="row g-3">
-                            <div class="input-group mb-1">
-                                <img src="data:image/jpeg;base64,{{imagen_base64}}" width="150" height="100">
+                            <div class="input-group mb-1 align-items-center justify-content-center">
+                                <img src="data:image/jpeg;base64,{{imagen_base64}}" width="100" height="100">
                             </div>
                             {%for aux in consultaAuxi%}
                             
@@ -65,9 +65,7 @@
                                 <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
                                     value="{{aux.4}}" disabled>
                                 
-                                <span class="input-group-text" style="background-color: white;" id="basic-addon3">Contraseña</span>
-                                <input type="text" name="txtdepartamento" class="form-control" id="basic-url" aria-describedby="basic-addon3"
-                                    value="{{aux.5}}" disabled>
+                                
                         
                             </div>
                             

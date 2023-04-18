@@ -436,6 +436,7 @@ def ComentarioAuxiliar(ticket,loguser):
     print(ticket)
     return render_template('ComentarioAuxiliar.html', ticket1=data,ticket=ticket ,loguser=loguser)
 
+
 @app.route('/insertComentarioA/<ticket>/<string:loguser>',methods=['POST'])
 def insertComentarioA(ticket,loguser):
   if request.method=='POST':
@@ -472,7 +473,7 @@ def insertComentarioC(ticket,loguser):
         return redirect(url_for('AdminTickets',loguser=loguser))
 
 
-        #ASIGNAR AUXILIAR
+        
 
 #ASIGNAR AUXILIAR
 
@@ -525,16 +526,12 @@ def AdminReportes(loguser):
     return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
 
 
-
-
 @app.route('/adminGenerarReporte')
 def adminGenerarReporte():
     # Crear el archivo PDF
-    
-    
+       
     reporte_path = 'static/reportes/adminReporte.pdf'
-    # ...
-
+   
     # Retornar el archivo generado utilizando Flask send_file
     return send_file(reporte_path, as_attachment=True)
 
@@ -543,43 +540,54 @@ def adminGenerarReporte():
 ################################## PERFIL AUXILIAR #################################################
 @app.route('/perfilAuxiliar/<string:loguser>')
 def perfilAuxiliar(loguser):
-    try:
-        cur= mysql.connection.cursor()
-        cur.execute('SELECT users.nombre, users.mail, users.domicilio, users.telefono, tipousers.tipoUsuario FROM users INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.id=%s',[loguser])
-        data=cur.fetchall()
-        print(data)
-        cursor = mysql.connection.cursor()
-        # Obtener información de la imagen desde la base de datos
-        cursor.execute("SELECT nombre, image FROM users WHERE id = %s", (loguser,))
-        imagen = cursor.fetchone()
-        cursor.close()
+    
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT users.nombre, users.mail, users.domicilio, users.telefono, tipousers.tipoUsuario FROM users INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE users.id=%s',[loguser])
+    data=cur.fetchall()
+    print(data)
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT image FROM users WHERE id=%s", (loguser,))
+    imagen_actual = cursor.fetchone()[0]
 
-        if imagen:
+
+    if imagen_actual:
             # Obtener la imagen en formato binario desde la base de datos
-            imagen_binario = imagen[1]
+        imagen_binario = imagen_actual
+            # Codificar la imagen en base64
+        imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+
+            # Pasar la información de la imagen a la plantilla HTML
+        return render_template('perfilAuxiliar.html', loguser=loguser, myInfo=data, imagen_base64=imagen_base64)
+    else:
+            # Manejar caso si la imagen no existe
+        return 'Imagen no encontrada', 404  
+
+
+@app.route('/editarAuxiliar/<string:loguser>')
+def editarAuxiliar(loguser):
+    try:
+        cursor= mysql.connection.cursor()
+        cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ',[loguser])   
+        consulta= cursor.fetchall()
+        cursor1 = mysql.connection.cursor()
+        cursor1.execute("SELECT image FROM users WHERE id=%s", (loguser,))
+        imagen_actual = cursor1.fetchone()[0]
+
+
+        if imagen_actual:
+            # Obtener la imagen en formato binario desde la base de datos
+            imagen_binario = imagen_actual
             # Codificar la imagen en base64
             imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
 
             # Pasar la información de la imagen a la plantilla HTML
-            return render_template('perfilAuxiliar.html', loguser=loguser, myInfo=data, imagen_base64=imagen_base64)
+            return render_template('actualizarAuxiliar.html', personal= consulta[0] , loguser=loguser , imagen_base64=imagen_base64)
         else:
             # Manejar caso si la imagen no existe
             return 'Imagen no encontrada', 404
     except Exception as e:
         return str(e), 500
-
-
-
-
-    
-
-
-@app.route('/editarAuxiliar/<string:loguser>')
-def editarAuxiliar(loguser):
-    cursor= mysql.connection.cursor()
-    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ',[loguser])   
-    consulta= cursor.fetchall()
-    return render_template('actualizarAuxiliar.html', personal= consulta[0] , loguser=loguser )
+   
 
 @app.route('/actualizarAuxiliar/<string:loguser>',methods =['POST'])
 def actualizarAuxiliar(loguser):
@@ -596,6 +604,38 @@ def actualizarAuxiliar(loguser):
 
     flash('Tu Perfil se actualizo en la BD')
     return redirect(url_for('perfilAuxiliar',loguser=loguser))
+
+
+@app.route('/auxiliarActualizarImagen/<string:loguser>')
+def auxiliarActualizarImagen( loguser):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT image FROM users WHERE id=%s", (loguser,))
+    imagen_actual = cursor.fetchone()[0]
+
+
+    if imagen_actual:
+            # Obtener la imagen en formato binario desde la base de datos
+        imagen_binario = imagen_actual
+            # Codificar la imagen en base64
+        imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+        return render_template('auxiliarEditarImagen.html', loguser=loguser, imagen_base64=imagen_base64)
+
+    
+@app.route('/auxiliarEditarImagen/<string:loguser>',methods =['POST'])
+def auxiliarEditarImagen( loguser):
+   
+        # Obtener la imagen actual de la base de datos
+        cursor = mysql.connection.cursor()
+
+        # Actualizar la imagen en la base de datos
+        nueva_imagen = request.files['nueva_imagen']
+        cursor.execute("UPDATE users SET image=%s WHERE id=%s", (nueva_imagen.read(), loguser))
+        mysql.connection.commit()
+
+        # Mostrar una respuesta al usuario
+        flash( 'Imagen actualizada correctamente')
+        return redirect(url_for('editarAuxiliar', loguser = loguser))
+
 
 @app.route('/Seguimiento/<string:loguser>/<string:id_ticket>')
 def Seguimiento(loguser, id_ticket):
@@ -708,37 +748,56 @@ def insertAuxComentarioC(ticket,loguser):
 ################################## PERFIL CLIENTE #############################################3
 @app.route('/perfilCliente/<string:loguser>')
 def perfilCliente(loguser):
-    try: 
-        cursor1=mysql.connection.cursor()
-        cursor1.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
-        consulta = cursor1.fetchall()
-        cursor = mysql.connection.cursor()
+    
+    cursor1=mysql.connection.cursor()
+    cursor1.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
+    consulta = cursor1.fetchall()
+    cursor = mysql.connection.cursor()
             # Obtener información de la imagen desde la base de datos
-        cursor.execute("SELECT nombre, image FROM users WHERE id = %s", (loguser,))
-        imagen = cursor.fetchone()
-        cursor1.close()
+        
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT image FROM users WHERE id=%s", (loguser,))
+    imagen_actual = cursor.fetchone()[0]
 
-        if imagen:
+
+    if imagen_actual:
             # Obtener la imagen en formato binario desde la base de datos
-            imagen_binario = imagen[1]
+        imagen_binario = imagen_actual
             # Codificar la imagen en base64
-            imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+        imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
 
             # Pasar la información de la imagen a la plantilla HTML
-            return render_template('perfilCliente.html', loguser=loguser, consultaAuxi = consulta, imagen_base64=imagen_base64)
-        else:
+        return render_template('perfilCliente.html', loguser=loguser, consultaAuxi = consulta, imagen_base64=imagen_base64)
+
+    else:
             # Manejar caso si la imagen no existe
-            return 'Imagen no encontrada', 404
-    except Exception as e:
-        return str(e), 500
+        return 'Imagen no encontrada', 404  
+
+           
+    
     
 @app.route('/editarPerfilCliente/<string:loguser>')
 def editarPerfilCliente(loguser):
     cursor= mysql.connection.cursor()
     cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
-
     consulta= cursor.fetchall()
-    return render_template('actualizarPerfilCliente.html', personal= consulta[0] , loguser=loguser )
+    cursor1 = mysql.connection.cursor()
+    cursor1.execute("SELECT image FROM users WHERE id=%s", (loguser,))
+    imagen_actual = cursor1.fetchone()[0]
+
+
+    if imagen_actual:
+            # Obtener la imagen en formato binario desde la base de datos
+        imagen_binario = imagen_actual
+            # Codificar la imagen en base64
+        imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+
+            # Pasar la información de la imagen a la plantilla HTML
+        return render_template('actualizarPerfilCliente.html', personal= consulta[0] , loguser=loguser , imagen_base64=imagen_base64)
+    else:
+            # Manejar caso si la imagen no existe
+        return 'Imagen no encontrada', 404
+   
 
 @app.route('/actualizarPerfilCliente/<string:loguser>',methods =['POST'])
 def actualizarPerfilCliente(loguser):
@@ -756,6 +815,35 @@ def actualizarPerfilCliente(loguser):
     flash('Tu Perfil se actualizo en la BD')
     return redirect(url_for('perfilCliente',loguser=loguser))
 
+@app.route('/clienteActualizarImagen/<string:loguser>')
+def clienteActualizarImagen( loguser):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT image FROM users WHERE id=%s", (loguser,))
+    imagen_actual = cursor.fetchone()[0]
+
+
+    if imagen_actual:
+            # Obtener la imagen en formato binario desde la base de datos
+        imagen_binario = imagen_actual
+            # Codificar la imagen en base64
+        imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+        return render_template('ClienteEditarImagen.html', loguser=loguser, imagen_base64=imagen_base64)
+
+    
+@app.route('/ClienteEditarImagen/<string:loguser>',methods =['POST'])
+def ClienteEditarImagen( loguser):
+   
+        # Obtener la imagen actual de la base de datos
+        cursor = mysql.connection.cursor()
+
+        # Actualizar la imagen en la base de datos
+        nueva_imagen = request.files['nueva_imagen']
+        cursor.execute("UPDATE users SET image=%s WHERE id=%s", (nueva_imagen.read(), loguser))
+        mysql.connection.commit()
+
+        # Mostrar una respuesta al usuario
+        flash( 'Imagen actualizada correctamente')
+        return redirect(url_for('editarPerfilCliente', loguser = loguser))
 
         #SOLICITUD
 

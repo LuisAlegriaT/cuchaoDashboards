@@ -1,0 +1,52 @@
+<head>
+  <title>
+    Vista Auxiliar
+  </title>
+</head>
+
+{%extends 'plantillaAuxiliares.html'%}
+{%block body%}
+<div class="container">
+
+  
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+  <br>
+  <br>
+      <div class="d-flex align-items-center justify-content-center vh-50 h-50">
+        <div class="col w-50 h-50 d-flex align-items-center justify-content-center">
+          <div class="card text-center">
+            <div class="card-header" style="color: white; background-color: MidnightBlue;">
+              ACTUALIZAR FOTO PERFIL
+            </div>
+            <div class="card-body">
+              <form method="post" enctype="multipart/form-data" action="/auxiliarEditarImagen/{{loguser}}">
+                <div class="input-group mb-3  align-items-center justify-content-center ">
+                  <img src="data:image/jpeg;base64,{{imagen_base64}}" width="100" height="100">
+                </div>
+                <div class="input-group mb-3">
+                  <label for="nueva_imagen" class="input-group-text">Selecciona una nueva imagen:</label>
+                  <input type="file" name="nueva_imagen" class="form-control" id="nueva_imagen">
+                </div>
+              
+            </div>
+            <div class="card-footer text-muted">
+              <input type="submit" value="Actualizar" class="btn btn-outline-primary">
+              <a href="/editarAuxiliar/{{loguser}}" class="btn btn-outline-primary">Cancelar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+</div>
+{%endblock%}

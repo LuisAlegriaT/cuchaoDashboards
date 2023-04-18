@@ -21,7 +21,7 @@
     {%endif%}
     {%endwith%}
     
-    <form action="/crearPersonal/{{loguser}}" method="POST">
+    <form action="/crearPersonal/{{loguser}}" enctype="multipart/form-data" method="POST">
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon3">Nombre</span>
         <input type="text" name="txtnombre" class="form-control" id="basic-url" aria-describedby="basic-addon3">
@@ -67,14 +67,17 @@
         </select>
         
         
-          <input type="file" class="form-control" id="inputGroupFile02" name="txtimagen">
-          <label class="input-group-text" for="inputGroupFile02">Foto</label>
+          
         
+      </div>
+      <div class="input-group mb-3">
+        <label for="imagen" class="input-group-text">Selecciona una nueva imagen:</label>
+        <input type="file" name="imagen" class="form-control" id="imagen">
       </div>
       
       <div class="input-group">
         <div class="card-footer text-muted">
-            <button class="btn btn-outline-primary" type="submit">Guardar Personal</button>
+            <input type="submit" value="Guardar Personal" class="btn btn-outline-primary">
             <a href="/adminClandAux/{{loguser}}" class="btn btn-outline-primary">Cancelar</a>
         </div>
       </div>

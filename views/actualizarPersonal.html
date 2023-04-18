@@ -63,16 +63,24 @@
             {%endfor%}
 
         </select>
-
-        <input type="file" class="form-control" id="inputGroupFile02" name="txtimagen" > 
-        <label class="input-group-text" for="inputGroupFile02">Foto</label>
       </div>
+      
       
       <div class="input-group">
         <div class="card-footer text-muted">
             <button  class="btn btn-outline-primary">Actualizar</button>
             <a href="/adminClandAux/{{loguser}}" class="btn btn-outline-primary">Cancelar</a>
           </div> 
+      </div>
+      <div class="input-group mb-3">
+      
+        <img src="data:image/jpeg;base64,{{imagen_base64}}" width="100" height="100">
+        <div class="input-group mb-3">
+          <div class="card-footer text-muted">
+            <a href="/adminPersonalImagen/{{personal.2}}/{{loguser}}" class="btn btn-outline-primary">Actualizar imagen</a>
+          </div>
+        </div>
+      
       </div>
   </form>
 </div>

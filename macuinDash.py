@@ -5,10 +5,8 @@ from flask_mysqldb import MySQL
 from flask_session import Session
 from reportlab.pdfgen import canvas
 import base64
-
-
-
-
+from PIL import Image
+import binascii
 
 
 #inicializar el Framework
@@ -125,10 +123,14 @@ def logout():
 #Cliente y Auxiliares
 @app.route('/adminClandAux/<string:loguser>')
 def adminClandAux(loguser):
-    cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo ')
-    consulta = cursor.fetchall()
-    return render_template('adminClandAux.html', usuario=consulta, loguser=loguser)
+        cursor1=mysql.connection.cursor()
+        cursor1.execute('SELECT departamento.nombre_departamento, users.id,users.nombre,users.mail,tipousers.tipoUsuario, users.image FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo ')
+        consulta = cursor1.fetchall()
+  
+        return render_template('adminClandAux.html', usuario=consulta, loguser=loguser )
+        
+   
+    
 
     #BUSQUEDA DE PERSONAL
 
@@ -173,39 +175,68 @@ def loginCrear(loguser):
     consulta2 = cursor2.fetchall()
     return render_template('crearPersonal.html', usuario=consulta, tipousuario = consulta2,loguser=loguser )
 
-@app.route('/crearPersonal/<string:loguser>',methods =['POST'])
+@app.route('/crearPersonal/<string:loguser>', methods=['POST'])
 def crearPersonal(loguser):
     if request.method == 'POST':
-        vnombre= request.form['txtnombre']
-        vmail= request.form['txtmail']
-        vdomicilio= request.form['txtdomicilio']
-        vdepartamento= request.form['txtdepartamento']
-        vtelefono= request.form['txttelefono']
-        vtipo= request.form['txttipo']
-        vpass= request.form['txtpass']
-        vimagen= request.form['txtimagen']
-        print(vnombre,vmail,vdomicilio,vdepartamento,vtelefono, vimagen,vtipo)
+        vnombre = request.form['txtnombre']
+        vmail = request.form['txtmail']
+        vdomicilio = request.form['txtdomicilio']
+        vdepartamento = request.form['txtdepartamento']
+        vtelefono = request.form['txttelefono']
+        vtipo = request.form['txttipo']
+        vpass = request.form['txtpass']
+        imagen = request.files['imagen']
+        imagen_bytes = imagen.read()
 
-        cursor=mysql.connection.cursor()
-        cursor.execute('insert into users(nombre ,mail,pass, domicilio, departamento_id ,telefono, image, tipoId)values (%s,%s,%s,%s,%s,%s,%s,%s)', 
-        (vnombre,vmail,vpass, vdomicilio, vdepartamento,vtelefono,vimagen,vtipo)) #%s son para las cadenas
-        mysql.connection.commit()
-    
-    flash('Personal almacenado en la BD')
-    return redirect(url_for('adminClandAux',loguser=loguser)) 
+        cursor = mysql.connection.cursor()
+        try:
+            cursor.execute('INSERT INTO users(nombre, mail, pass, domicilio, departamento_id, telefono, image, tipoId) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)', 
+                (vnombre, vmail, vpass, vdomicilio, vdepartamento, vtelefono, imagen_bytes, vtipo))
+            mysql.connection.commit()
+            flash('Personal almacenado en la BD')
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f'Error al insertar el personal en la BD: {str(e)}')
+        finally:
+            cursor.close()
+
+    return redirect(url_for('adminClandAux', loguser=loguser))
 
 @app.route('/editarPersonal/<string:id>/<string:loguser>')
 def editarPersonal(id, loguser):
-    cursor= mysql.connection.cursor()
-    cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo where id={0}'.format(id))
-    consulta= cursor.fetchall()
-    cursor1=mysql.connection.cursor()
-    cursor1.execute('SELECT * FROM departamento')
-    consulta1 = cursor1.fetchall()
-    cursor2=mysql.connection.cursor()
-    cursor2.execute('SELECT * FROM tipousers')
-    consulta2 = cursor2.fetchall()
-    return render_template('actualizarPersonal.html', personal= consulta[0], usuario =consulta1, roles=consulta2, loguser=loguser)
+    try:
+        cursor= mysql.connection.cursor()
+        cursor.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo where id={0}'.format(id))
+        consulta= cursor.fetchall()
+        cursor1=mysql.connection.cursor()
+        cursor1.execute('SELECT * FROM departamento')
+        consulta1 = cursor1.fetchall()
+        cursor2=mysql.connection.cursor()
+        cursor2.execute('SELECT * FROM tipousers')
+        consulta2 = cursor2.fetchall()
+
+        
+        
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT image FROM users WHERE id=%s", (id,))
+        imagen_actual = cursor.fetchone()[0]
+
+
+        if imagen_actual:
+            # Obtener la imagen en formato binario desde la base de datos
+            imagen_binario = imagen_actual
+            # Codificar la imagen en base64
+            imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+
+            # Pasar la información de la imagen a la plantilla HTML
+            return render_template('actualizarPersonal.html', personal= consulta[0], usuario =consulta1, roles=consulta2, loguser=loguser, imagen_base64=imagen_base64)
+
+        else:
+            # Manejar caso si la imagen no existe
+            return 'Imagen no encontrada', 404
+    except Exception as e:
+        return str(e), 500
+
 
 @app.route('/actualizarPersonal/<string:id>/<string:loguser>',methods =['POST'])
 def actualizarPersonal(id, loguser):
@@ -216,16 +247,46 @@ def actualizarPersonal(id, loguser):
         vdepartamento= request.form['txtdepartamento']
         vtelefono= request.form['txttelefono']
         vtipo= request.form['txttipo']
-        vimagen= request.form['txtimagen']
-        print(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,vimagen,id)
+        print(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id)
 
         cursor=mysql.connection.cursor()
-        cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s, departamento_id=%s ,telefono=%s ,image=%s,tipoId=%s where id=%s',(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,vimagen,id))
+        cursor.execute('update users set nombre=%s ,mail=%s, domicilio=%s, departamento_id=%s ,telefono=%s ,tipoId=%s where id=%s',(vnombre,vmail, vdomicilio, vdepartamento,vtelefono,vtipo,id))
         mysql.connection.commit()
 
     flash('Personal se actualizo en la BD')
     return redirect(url_for('adminClandAux', loguser = loguser))
 
+@app.route('/adminPersonalImagen/<string:id>/<string:loguser>')
+def adminPersonalImagen(id, loguser):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT image FROM users WHERE id=%s", (id,))
+    imagen_actual = cursor.fetchone()[0]
+
+
+    if imagen_actual:
+            # Obtener la imagen en formato binario desde la base de datos
+        imagen_binario = imagen_actual
+            # Codificar la imagen en base64
+        imagen_base64 = base64.b64encode(imagen_binario).decode('utf-8')
+        return render_template('adminPersonalImagen.html', loguser=loguser, id =id, imagen_base64=imagen_base64)
+
+    
+@app.route('/actualizarImagenPersonal/<string:id>/<string:loguser>',methods =['POST'])
+def actualizarImagenPersonal(id, loguser):
+   
+        # Obtener la imagen actual de la base de datos
+        cursor = mysql.connection.cursor()
+
+        # Actualizar la imagen en la base de datos
+        nueva_imagen = request.files['nueva_imagen']
+        cursor.execute("UPDATE users SET image=%s WHERE id=%s", (nueva_imagen.read(), id))
+        mysql.connection.commit()
+
+        # Mostrar una respuesta al usuario
+        flash( 'Imagen actualizada correctamente')
+        return redirect(url_for('adminClandAux', loguser = loguser))
+
+        
 
 @app.route('/eliminarPersonal/<string:id>/<string:loguser>')
 def eliminarPersonal(id, loguser):

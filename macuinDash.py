@@ -5,8 +5,6 @@ from flask_mysqldb import MySQL
 from flask_session import Session
 from reportlab.pdfgen import canvas
 import base64
-from PIL import Image
-import binascii
 
 
 #inicializar el Framework
@@ -106,19 +104,19 @@ def login():
             if(account[0] == 3 and account[1] == usuario and account[2] == pas):
                 a = 'Bienvenido ' + account[1]
                 flash(a)
-                return redirect(url_for('perfilCliente',loguser=userlog)) # vista clientes
-        
-                              
+                return redirect(url_for('perfilCliente',loguser=userlog)) # vista clientes              
         else:
             flash('Datos incorrectos')
             return redirect(url_for('log'))
-        
+
+
 @app.route('/Admin/<string:id>')
 def Admin(id):
     if 'id' not in session:
         return redirect(url_for('log')) # Redirigir a la página de inicio de sesión si no está autenticado
     else:
         return render_template('adminTickets.html', user=user)
+
 
 @app.route('/logout')
 def logout():
@@ -132,11 +130,8 @@ def adminClandAux(loguser):
         cursor1=mysql.connection.cursor()
         cursor1.execute('SELECT departamento.nombre_departamento, users.id,users.nombre,users.mail,tipousers.tipoUsuario, users.image FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo ')
         consulta = cursor1.fetchall()
-  
         return render_template('adminClandAux.html', usuario=consulta, loguser=loguser )
         
-   
-    
 
     #BUSQUEDA DE PERSONAL
 
@@ -168,7 +163,6 @@ def adminClandBusqueda(loguser):
         return redirect(url_for('adminClandAux',loguser=loguser)) 
 
 
-
         ##PERSONAL
 
 @app.route('/loginCrear/<string:loguser>')
@@ -180,6 +174,7 @@ def loginCrear(loguser):
     cursor2.execute('SELECT * FROM tipousers')
     consulta2 = cursor2.fetchall()
     return render_template('crearPersonal.html', usuario=consulta, tipousuario = consulta2,loguser=loguser )
+
 
 @app.route('/crearPersonal/<string:loguser>', methods=['POST'])
 def crearPersonal(loguser):
@@ -205,8 +200,8 @@ def crearPersonal(loguser):
             flash(f'Error al insertar el personal en la BD: {str(e)}')
         finally:
             cursor.close()
-
     return redirect(url_for('adminClandAux', loguser=loguser))
+
 
 @app.route('/editarPersonal/<string:id>/<string:loguser>')
 def editarPersonal(id, loguser):
@@ -221,8 +216,6 @@ def editarPersonal(id, loguser):
         cursor2.execute('SELECT * FROM tipousers')
         consulta2 = cursor2.fetchall()
 
-        
-        
         cursor = mysql.connection.cursor()
         cursor.execute("SELECT image FROM users WHERE id=%s", (id,))
         imagen_actual = cursor.fetchone()[0]
@@ -262,12 +255,12 @@ def actualizarPersonal(id, loguser):
     flash('Personal se actualizo en la BD')
     return redirect(url_for('adminClandAux', loguser = loguser))
 
+
 @app.route('/adminPersonalImagen/<string:id>/<string:loguser>')
 def adminPersonalImagen(id, loguser):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT image FROM users WHERE id=%s", (id,))
     imagen_actual = cursor.fetchone()[0]
-
 
     if imagen_actual:
             # Obtener la imagen en formato binario desde la base de datos
@@ -293,7 +286,6 @@ def actualizarImagenPersonal(id, loguser):
         return redirect(url_for('adminClandAux', loguser = loguser))
 
         
-
 @app.route('/eliminarPersonal/<string:id>/<string:loguser>')
 def eliminarPersonal(id, loguser):
     cursor= mysql.connection.cursor()
@@ -301,7 +293,6 @@ def eliminarPersonal(id, loguser):
     mysql.connection.commit()
     flash('Personal Eliminado de la base de datos')
     return redirect(url_for('adminClandAux', loguser = loguser))
-
 
 
 ##############################################################-----Departamentos---#######################################################################################
@@ -312,6 +303,7 @@ def AdminDepa(loguser):
     cursor.execute('SELECT * FROM departamento')
     consulta = cursor.fetchall()
     return render_template('adminDepartamentos.html', departamento=consulta, loguser=loguser)
+
 
         #BUSQUEDA DE DEPARTAMENTOS
 @app.route('/adminDepartamentosBusqueda/<string:loguser>', methods=['POST'])
@@ -334,11 +326,11 @@ def adminDepartamentosBusqueda(loguser):
         return redirect(url_for('AdminDepa',loguser=loguser)) 
 
 
-
             #INSERTAR
 @app.route('/CrearDepartamentos/<string:loguser>')
 def CrearDepa(loguser):
     return render_template('CrearDep.html', loguser= loguser)
+
 
 @app.route('/insertDepas/<string:loguser>', methods=['POST'])
 def insertarD(loguser):
@@ -352,7 +344,6 @@ def insertarD(loguser):
         return redirect(url_for('AdminDepa', loguser= loguser))
 
 
-
                                 #ACTUALIZAR
 
 @app.route('/ActualizarDepartamentos/<id_departamento>/<string:loguser>')
@@ -362,6 +353,7 @@ def ActualizarDepa(id_departamento, loguser):
     data=cur.fetchall()
     print(data)
     return render_template('ActualizarDep.html',departamento=data[0], loguser= loguser)
+
 
 @app.route('/updateDepartamento/<id_departamento>/<string:loguser>', methods=['POST'])
 def updateDepartamento(id_departamento, loguser):
@@ -379,6 +371,7 @@ def updateDepartamento(id_departamento, loguser):
         flash('Departamento Actualizado!')
         return redirect(url_for('AdminDepa', loguser=loguser))
 
+
         #ELIMINAR 
 @app.route('/EliminarDepartamentos/<string:id_departamento>/<string:loguser>')
 def EliminarDepa(id_departamento, loguser):
@@ -388,6 +381,7 @@ def EliminarDepa(id_departamento, loguser):
     flash('Departamento Eliminado')
     return redirect(url_for('AdminDepa',loguser = loguser))
 
+
 ###########################################################------Tickets-----------###############################################
 @app.route('/adminTickets/<string:loguser>')
 def AdminTickets(loguser):
@@ -395,6 +389,7 @@ def AdminTickets(loguser):
     cursor.execute('SELECT id_ticket, fecha, detalle,estatus, clasificacion, user_idCliente, nombre FROM ticket JOIN users ON (ticket.user_idCliente = users.id) ')
     consulta = cursor.fetchall()
     return render_template('adminTickets.html', ticket=consulta, loguser = loguser)
+
 
     #BUSCAR TICKET
 @app.route('/adminTicketsBusqueda/<string:loguser>', methods=['POST'])
@@ -456,6 +451,7 @@ def insertComentarioA(ticket,loguser):
         mysql.connection.commit()
         return redirect(url_for('AdminTickets', loguser=loguser))
 
+
         #COMENTARIO CLIENTE
 @app.route('/ComentarioCliente/<ticket>/<string:loguser>',methods=['POST'])
 def ComentarioCliente(ticket,loguser):
@@ -465,6 +461,7 @@ def ComentarioCliente(ticket,loguser):
     data=cur.fetchall()
     print(ticket)
     return render_template('ComentarioCliente.html', ticket1=data,ticket=ticket,loguser=loguser)
+
 
 @app.route('/insertComentarioC/<ticket>/<string:loguser>',methods=['POST'])
 def insertComentarioC(ticket,loguser):
@@ -477,9 +474,7 @@ def insertComentarioC(ticket,loguser):
         cursor.execute('INSERT INTO comentariosCliente(comentarioC, ticketCliente) VALUES (%s,%s)',(comentarioC, ticket))
         mysql.connection.commit()
         return redirect(url_for('AdminTickets',loguser=loguser))
-
-
-        
+  
 
 #ASIGNAR AUXILIAR
 
@@ -493,6 +488,7 @@ def adminAsignar(id_ticket,loguser):
     cursor.execute('SELECT * FROM users WHERE tipoId = "2" ')
     consulta = cursor.fetchall()
     return render_template('adminAsignar.html', auxiliar=consulta, ticketSend=ticketRecived,ticketsAux=consultaAux,loguser=loguser)
+
 
 @app.route('/asignarTicket/<ticketSend>/<string:loguser>', methods=['POST'])
 def asignarTicket(ticketSend,loguser):
@@ -524,8 +520,8 @@ def asignarTicket(ticketSend,loguser):
     
     
     #REPORTE
-@app.route('/AdminReportes/<string:loguser>')
-def AdminReportes(loguser):
+@app.route('/reporte/<string:loguser>')
+def generar_reporte(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id ')
     reporte = cursor.fetchall()
@@ -542,7 +538,6 @@ def adminGenerarReporte():
     return send_file(reporte_path, as_attachment=True)
 
 
-
 ################################## PERFIL AUXILIAR #################################################
 @app.route('/perfilAuxiliar/<string:loguser>')
 def perfilAuxiliar(loguser):
@@ -554,7 +549,6 @@ def perfilAuxiliar(loguser):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT image FROM users WHERE id=%s", (loguser,))
     imagen_actual = cursor.fetchone()[0]
-
 
     if imagen_actual:
             # Obtener la imagen en formato binario desde la base de datos
@@ -650,6 +644,7 @@ def Seguimiento(loguser, id_ticket):
     data=cur.fetchall()
     return render_template('auxSeguimiento.html',loguser=loguser , tickets=data )
 
+
 @app.route('/SeguimientoEstatus/<string:id>/<string:loguser>',methods =['POST'])
 def SeguimientoEstatus(id, loguser):
     cursor=mysql.connection.cursor()
@@ -677,7 +672,6 @@ def SeguimientoEstatus(id, loguser):
     
         #TICKETS
 
-
 @app.route('/misTickets/<string:loguser>')
 def ticketsAuxiliar(loguser):
     cur= mysql.connection.cursor()
@@ -685,8 +679,8 @@ def ticketsAuxiliar(loguser):
     data=cur.fetchall()
     return render_template('misTickets.html',loguser=loguser, misTickets=data)
 
-        #BUSQUEDA DE TICKETS
 
+        #BUSQUEDA DE TICKETS
 
 @app.route('/auxiliarTicketsBusqueda/<string:loguser>', methods=['POST'])
 def auxiliarTicketsBusqueda(loguser):
@@ -724,6 +718,7 @@ def auxiliarTicketsBusqueda(loguser):
     else: 
         return redirect(url_for('ticketsAuxiliar',loguser=loguser))
 
+
 @app.route('/ComentarioACliente/<string:loguser>/<string:id_ticket>')
 def ComentarioACliente(loguser, id_ticket):
     cur= mysql.connection.cursor()
@@ -732,8 +727,8 @@ def ComentarioACliente(loguser, id_ticket):
     conexion= mysql.connection.cursor()
     conexion.execute('SELECT ticket.user_idCliente, ticket.detalle, ticket.estatus, users.nombre , comentarioscliente.comentarioC FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN comentarioscliente ON ticket.id_ticket = comentarioscliente.ticketCliente INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux WHERE ticketaux.userAux_id = %s',[loguser])
     tablas=conexion.fetchall()
-
     return render_template('auxComentarioC.html',loguser=loguser, data= data, ticket=id_ticket, tablas = tablas) 
+
 
 @app.route('/insertAuxComentarioC/<string:ticket>/<string:loguser>',methods=['POST'])
 def insertAuxComentarioC(ticket,loguser):
@@ -750,11 +745,9 @@ def insertAuxComentarioC(ticket,loguser):
 
 
 
-
 ################################## PERFIL CLIENTE #############################################3
 @app.route('/perfilCliente/<string:loguser>')
 def perfilCliente(loguser):
-    
     cursor1=mysql.connection.cursor()
     cursor1.execute('SELECT * FROM departamento INNER JOIN users ON departamento.id_departamento = users.departamento_id INNER JOIN tipousers ON users.tipoId = tipousers.idTipo WHERE id= %s ', [loguser])
     consulta = cursor1.fetchall()
@@ -764,7 +757,6 @@ def perfilCliente(loguser):
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT image FROM users WHERE id=%s", (loguser,))
     imagen_actual = cursor.fetchone()[0]
-
 
     if imagen_actual:
             # Obtener la imagen en formato binario desde la base de datos
@@ -777,9 +769,7 @@ def perfilCliente(loguser):
 
     else:
             # Manejar caso si la imagen no existe
-        return 'Imagen no encontrada', 404  
-
-           
+        return 'Imagen no encontrada', 404     
     
     
 @app.route('/editarPerfilCliente/<string:loguser>')
@@ -790,7 +780,6 @@ def editarPerfilCliente(loguser):
     cursor1 = mysql.connection.cursor()
     cursor1.execute("SELECT image FROM users WHERE id=%s", (loguser,))
     imagen_actual = cursor1.fetchone()[0]
-
 
     if imagen_actual:
             # Obtener la imagen en formato binario desde la base de datos
@@ -820,6 +809,7 @@ def actualizarPerfilCliente(loguser):
 
     flash('Tu Perfil se actualizo en la BD')
     return redirect(url_for('perfilCliente',loguser=loguser))
+
 
 @app.route('/clienteActualizarImagen/<string:loguser>')
 def clienteActualizarImagen( loguser):
@@ -851,8 +841,8 @@ def ClienteEditarImagen( loguser):
         flash( 'Imagen actualizada correctamente')
         return redirect(url_for('editarPerfilCliente', loguser = loguser))
 
+       
         #SOLICITUD
-
 @app.route('/clienteSolicitud/<string:loguser>')
 def clienteSolicitud(loguser):
     cursor=mysql.connection.cursor()
@@ -860,8 +850,8 @@ def clienteSolicitud(loguser):
     consulta = cursor.fetchall()
     return render_template('clienteSolicitud.html', miSolicitud= consulta ,loguser = loguser)
 
+        
         #BUSQUEDA DE SOLICITUD
-
 @app.route('/clienteSolicitudBusqueda/<string:loguser>', methods=['POST'])
 def clienteSolicitudBusqueda(loguser):
     if request.method == 'POST':
@@ -890,13 +880,13 @@ def clienteSolicitudBusqueda(loguser):
         return redirect(url_for('clienteSolicitud',loguser=loguser))
 
 
-
 @app.route('/crearSolicitud/<string:loguser>')
 def crearSolicitud(loguser):
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT users.id, users.nombre,departamento.id_departamento, departamento.nombre_departamento FROM users INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE id= %s ', [loguser])
     consulta = cursor.fetchall()
     return render_template('crearSolicitud.html', loguser=loguser, personal =consulta)
+
 
 @app.route('/insertSolicitud/<string:loguser>', methods=['POST'])
 def insertarSolicitud(loguser):
@@ -911,6 +901,7 @@ def insertarSolicitud(loguser):
         cursor.execute('INSERT INTO ticket (fecha,detalle, clasificacion,user_idCliente) VALUES (%s, %s,%s, %s)',(fecha, detalles, clasificacion, loguser))
         mysql.connection.commit()
         return redirect(url_for('clienteSolicitud', loguser = loguser ))
+
 
 @app.route('/EliminarSolicitud/<string:loguser>/<string:idSolicitud>')
 def EliminarSolicitud(loguser, idSolicitud):
@@ -931,6 +922,7 @@ def EliminarSolicitud(loguser, idSolicitud):
         mysql.connection.commit()
         flash('Tu Ticket fue cancelado')
     return redirect(url_for('clienteSolicitud',loguser=loguser))
+
 
 @app.route('/NuncaSolicitud/<string:loguser>/<string:idSolicitud>')
 def NuncaSolicitud(loguser, idSolicitud):
@@ -953,8 +945,6 @@ def NuncaSolicitud(loguser, idSolicitud):
     return redirect(url_for('clienteSolicitud',loguser=loguser))
 
 
-        
-
 @app.route('/ComentariosAuxiliar/<string:loguser>/<string:id_ticket>')
 def ComentariosAuxiliar(loguser, id_ticket):
     cur= mysql.connection.cursor()
@@ -964,6 +954,7 @@ def ComentariosAuxiliar(loguser, id_ticket):
     conexion.execute('SELECT users.nombre,comentariosauxiliar.comentarioA, ticket.detalle, ticket.estatus FROM ticket INNER JOIN comentariosauxiliar ON ticket.id_ticket = comentariosauxiliar.ticketAuxiliar INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticketaux.userAux_id = users.id WHERE ticket.user_idCliente = %s',[loguser])
     tablas=conexion.fetchall()
     return render_template('clienteComentarioA.html',loguser=loguser, data= data, ticket=id_ticket, tablas = tablas)
+
 
 @app.route('/insertClienteComentarioA/<string:ticket>/<string:loguser>',methods=['POST'])
 def insertClienteComentarioA(ticket,loguser):
@@ -977,7 +968,7 @@ def insertClienteComentarioA(ticket,loguser):
         cursor.execute('INSERT INTO comentariosAuxiliar(comentarioA, ticketAuxiliar) VALUES (%s,%s)',(comentarioA, ticket))
         mysql.connection.commit()
         return redirect(url_for('clienteSolicitud', loguser=loguser))
-
+  
 
 
 #Arrancamos servidor

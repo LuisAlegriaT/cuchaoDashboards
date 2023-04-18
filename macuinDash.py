@@ -51,6 +51,14 @@ class user1():
 
 ################################/////////////////RUTAS////////////////############################################
 
+# Ruta protegida para el perfil de administrador
+@app.before_request
+def require_login():
+    allowed_routes = ['log', 'login'] # Rutas permitidas sin autenticación
+    if request.endpoint not in allowed_routes and 'id' not in session:
+        flash('Debes iniciar sesión primero.') # Mensaje de flash para mostrar en caso de no autenticación
+        return redirect(url_for('log')) # Redirigir a la página de inicio de sesión
+
 
 #--------Ruta General--------#
 @app.route('/')
@@ -105,19 +113,17 @@ def login():
             flash('Datos incorrectos')
             return redirect(url_for('log'))
         
-        
 @app.route('/Admin/<string:id>')
 def Admin(id):
-    if session['id'] == None:
-        return render_template('login.html')
+    if 'id' not in session:
+        return redirect(url_for('log')) # Redirigir a la página de inicio de sesión si no está autenticado
     else:
-        return render_template('adminTickets.html', user = user)  
- 
+        return render_template('adminTickets.html', user=user)
+
 @app.route('/logout')
 def logout():
-    session['id']=None
+    session.pop('id', None) # Eliminar la variable de sesión 'id'
     return render_template('login.html') 
-
 
 
 #Cliente y Auxiliares

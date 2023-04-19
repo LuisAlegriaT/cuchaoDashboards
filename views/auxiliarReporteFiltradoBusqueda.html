@@ -27,30 +27,21 @@
             <table class="table">
                 <thead class="table" style="color: rgb(210, 14, 14); background-color: #0a0d18;">
                     <tr>
-                        <th scope="col">CLIENTE</th>
-                        <th scope="col">DETALLES</th>
-                        <th scope="col">ESTATUS</th>
-                        <th scope="col">TICKETS</th>
-                        <th scope="col">DEPARTAMENTOS</th>
-                        <th scope="col">AUXILIARES</th>
-                        <th scope="col">FECHA</th>
+                        <th scope="col">Estatus</th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Fecha</th>
                     </tr>
                 </thead>
-
+            
                 <tbody>
                     {%for rep in reporte%}
                     <tr>
-                        <td>{{rep.7}}</td>
+                        <td>{{rep.0}}</td>
                         <td>{{rep.2}}</td>
-                        <td>{{rep.3}}</td>
-                        <td>{{rep.4}}</td>
-                        <td>{{rep.5}}</td>
-                        <td>{{rep.6}}</td>
                         <td>{{rep.1}}</td>
                     </tr>
                     {%endfor%}
                 </tbody>
-
             </table>
         </div>
 

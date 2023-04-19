@@ -1,0 +1,53 @@
+<br>
+<div class="container">
+    <div class="row">
+
+        <div class="col">
+            <div class="card text-center">
+                <div class="card-header" style="color: white; background-color: #4D64A4;">
+                    REPORTES DE TICKETS
+                </div>
+                <div class="card-body">
+
+
+
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <div class="row card">
+        <div class="col">
+            <table class="table">
+                <thead class="table" style="color: rgb(210, 14, 14); background-color: #0a0d18;">
+                    <tr>
+                        <th scope="col">Estatus</th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Fecha</th>
+                    </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {%for rep in reporte%}
+                        <tr>
+                            <td>{{rep.0}}</td>
+                            <td>{{rep.2}}</td>
+                            <td>{{rep.1}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>
+<br>
+
+</div>

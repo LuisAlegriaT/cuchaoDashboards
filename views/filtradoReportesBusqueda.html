@@ -1,0 +1,92 @@
+
+<head>
+    <title>
+        Vista Admin
+    </title>
+</head>
+
+
+{%extends 'plantilla.html'%}
+{%block body%}
+<div class="container">
+
+    <br>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    <ul class=flashes>
+        {%for msj in mensaje%}
+    
+        <div class="alert alert-warning alert-dismissible mb-3" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {{ msj }}
+        </div>
+    
+    </ul>
+    
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+
+    <div>
+        <form class="d-flex" >
+            
+            <a href="/filtradoReportes/{{loguser}}" class="btn btn-outline-primary">Regresar</a>
+            <a href="/reporteFiltrados/{{loguser}}/{{buscar}}" class="btn btn-outline-primary">Reporte</a>
+
+        </form>
+    </div><br>
+
+    
+
+    
+    <div class="container">
+        <div class="row">
+    
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: black; background-color: white;">
+                        REPORTES DE TICKETS
+                    </div>
+                    <div class="card-body">
+           
+        
+                <table class="table">
+                    <thead class="table" style="color: white; background-color: #4D64A4;">
+                        <tr>
+                            <th scope="col">TICKETS</th>
+                            <th scope="col">AUXILIARES</th>
+                            <th scope="col">DEPARTEMENTO</th>
+                            <th scope="col">FECHA</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        {%for rep in ticket%}
+                        <tr>
+                            <td>{{rep.0}}</td>
+                            <td>{{rep.2}}</td>
+                            <td>{{rep.3}}</td>
+                            <td>{{rep.1}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+    
+                </table>
+            </div>
+    
+        </div>
+    </div>
+    <br>
+    </div>
+    
+    </div>
+    </div>
+   
+
+        
+
+
+    </div>
+</div>
+
+{%endblock%}

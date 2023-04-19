@@ -1,0 +1,82 @@
+<head>
+    <title>
+        Vista Auxiliar
+    </title>
+</head>
+
+{%extends 'plantillaAuxiliares.html'%}
+{%block body%}
+<div class="container">
+
+    <br>
+    {%with mensaje = get_flashed_messages() %}
+    {%if mensaje%}
+    {%for msj in mensaje%}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ msj }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {%endfor%}
+    {%endif%}
+    {%endwith%}
+    
+    <div>
+        <form class="d-flex" method="post" action="/filtradoReportesAuxiliarBusqueda/{{loguser}}">
+            <input class="form-control me-2" type="search" name="buscar" placeholder="Buscar..." aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Buscar</button>
+
+            <a href="/reporteTicketsAuxiliar/{{loguser}}" class="btn btn-outline-primary">Reporte</a>
+          </form>
+    </div><br>
+
+    <div class="container">
+        <div class="row">
+            
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header" style="color: black; background-color: white">
+                        ADMINISTRADOR REPORTES
+                    </div>
+                    
+                    <div class="card-body">
+                        <table class="table">
+                            <thead class="table " style="color: white; background-color: #4D64A4;" >
+                                <tr>
+                                    <th scope="col">Estatus</th>
+                                    <th scope="col">Departamento</th>
+                                    <th scope="col">Fecha</th>
+                                </tr>
+                            </thead>
+                        
+                            <tbody>
+                                {%for rep in ticket%}
+                                <tr>
+                                    <td>{{rep.0}}</td>
+                                    <td>{{rep.2}}</td>
+                                    <td>{{rep.1}}</td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+           
+            
+            
+        </div>
+    </div>
+    
+    
+
+
+
+
+
+
+
+</div>
+{%endblock%}

@@ -3,8 +3,11 @@ from colorama import Cursor
 from flask import Flask, render_template, request ,Response , redirect,url_for,flash, session, make_response, send_file
 from flask_mysqldb import MySQL
 from flask_session import Session
-from reportlab.pdfgen import canvas
 import base64
+import mysql.connector
+from xhtml2pdf import pisa
+import io
+
 
 
 #inicializar el Framework
@@ -33,13 +36,13 @@ app.secret_key='mysecretkey'
 #------- Configuraciones Roles de Usuaio-----#
 
 class user():
-    def __init__(self,status,nombre,password)->None:
+    def _init_(self,status,nombre,password)->None:
         self.status = status
         self.nombre = nombre
         self.password = password
 
 class user1():
-    def __init__(self,idmed, nombre, rol)->None:
+    def _init_(self,idmed, nombre, rol)->None:
         self.idmed = idmed
         self.nombre = nombre
         self.rol = rol
@@ -520,22 +523,109 @@ def asignarTicket(ticketSend,loguser):
     
     
     #REPORTE
-@app.route('/reporte/<string:loguser>')
+@app.route('/filtradoReportes/<string:loguser>')
+def filtradoReportes(loguser):
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento WHERE t.fecha')
+    consulta = cursor.fetchall()
+    return render_template('filtradoReportes.html', ticket=consulta, loguser = loguser)
+
+@app.route('/reporteTickets/<string:loguser>')
 def generar_reporte(loguser):
     cursor=mysql.connection.cursor()
-    cursor.execute('SELECT * FROM ticket INNER JOIN users ON ticket.user_idCliente = users.id ')
+    cursor.execute('SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento WHERE t.fecha')
     reporte = cursor.fetchall()
-    return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
+    html = render_template('adminReporteFiltrado.html',loguser=loguser, reporte=reporte)
+    #return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
+
+    # Generación del PDF
+    pdf = generar_pdf(html)
+
+    # Respuesta HTTP con el PDF generado
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=filtradoReportes.pdf'
+    return response
 
 
-@app.route('/adminGenerarReporte')
-def adminGenerarReporte():
-    # Crear el archivo PDF
-       
-    reporte_path = 'static/reportes/adminReporte.pdf'
-   
-    # Retornar el archivo generado utilizando Flask send_file
-    return send_file(reporte_path, as_attachment=True)
+
+    #BUSCAR TICKET
+@app.route('/filtradoReportesBusqueda/<string:loguser>', methods=['POST'])
+def filtradoReportesBusqueda(loguser):
+    if request.method == 'POST':
+        buscar= request.form['buscar']
+        print(buscar)
+        cursor=mysql.connection.cursor()
+        
+        cursor.execute("""
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento WHERE t.fecha LIKE %s
+        UNION 
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento WHERE d.nombre_departamento LIKE %s
+        UNION        
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento  WHERE u.nombre LIKE %s
+        UNION        
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento  WHERE t.id_ticket LIKE %s
+        """,('%' + buscar + '%', '%' + buscar + '%', '%' + buscar + '%','%' + buscar + '%'))
+
+        # Obtener los resultados de la búsqueda
+        resultados = cursor.fetchall()
+
+        # Renderizar una plantilla con los resultados
+        return render_template('filtradoReportesBusqueda.html', ticket=resultados,  loguser=loguser, buscar=buscar)
+    else: 
+        return redirect(url_for('AdminTickets',loguser=loguser)) 
+
+
+@app.route('/reporteFiltrados/<string:loguser>/<string:buscar>')
+def reporteFiltrados(loguser, buscar):
+    print(buscar)
+    cursor=mysql.connection.cursor()
+        
+    cursor.execute("""
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento WHERE t.fecha LIKE %s
+        UNION 
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento WHERE d.nombre_departamento LIKE %s
+        UNION        
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento  WHERE u.nombre LIKE %s
+        UNION        
+        SELECT t.id_ticket, t.fecha, u.nombre, d.nombre_departamento FROM ticket t JOIN ticketaux ta ON t.id_ticket = ta.ticket_idAux 
+        JOIN users u ON ta.userAux_id = u.id JOIN departamento d ON u.departamento_id = d.id_departamento  WHERE t.id_ticket LIKE %s
+        """,('%' + buscar + '%', '%' + buscar + '%', '%' + buscar + '%','%' + buscar + '%'))
+
+        # Obtener los resultados de la búsqueda
+    reporte = cursor.fetchall()
+    html = render_template('adminReporteFiltradoBusqueda.html',loguser=loguser, reporte=reporte)
+    #return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
+
+    # Generación del PDF
+    pdf = generar_pdf(html)
+
+    # Respuesta HTTP con el PDF generado
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=adminReporteFiltradoBusqueda.pdf'
+    return response
+
+
+
+
+
+def generar_pdf(html):
+	# Conversión del HTML a PDF
+	pdf = io.BytesIO()
+	pisa.CreatePDF(io.StringIO(html), pdf)
+	pdf.seek(0)
+
+	return pdf.read()
+
+
 
 
 ################################## PERFIL AUXILIAR #################################################
@@ -692,7 +782,6 @@ def auxiliarTicketsBusqueda(loguser):
         cursor.execute("""
         SELECT * FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticket.fecha LIKE %s 
         AND ticketaux.userAux_id = %s
-        
         UNION 
         SELECT *  FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.departamento_id = departamento.id_departamento WHERE ticket.detalle LIKE %s
         AND ticketaux.userAux_id = %s
@@ -742,6 +831,95 @@ def insertAuxComentarioC(ticket,loguser):
         cursor.execute('INSERT INTO comentariosCliente(comentarioC, ticketCliente) VALUES (%s,%s)',(comentarioC, ticket))
         mysql.connection.commit()
         return redirect(url_for('ticketsAuxiliar', loguser=loguser))
+  
+
+        # REPORTES
+
+@app.route('/filtradoReportesAuxiliar/<string:loguser>')
+def filtradoReportesAuxiliar(loguser):
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux JOIN users ON ticket.user_idCliente = users.id JOIN departamento ON users.id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',(loguser))
+    consulta = cursor.fetchall()
+    return render_template('filtradoReportesAuxiliar.html', ticket=consulta, loguser = loguser)
+
+@app.route('/reporteTicketsAuxiliar/<string:loguser>')
+def reporteTicketsAuxiliar(loguser):
+    cursor=mysql.connection.cursor()
+    cursor.execute('SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux JOIN users ON ticket.user_idCliente = users.id JOIN departamento ON users.id = departamento.id_departamento WHERE ticketaux.userAux_id = %s',(loguser))
+    reporte = cursor.fetchall()
+    html = render_template('AuxiliarReporteFiltrado.html',loguser=loguser, reporte=reporte)
+    #return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
+
+    # Generación del PDF
+    pdf = generar_pdf(html)
+
+    # Respuesta HTTP con el PDF generado
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=AuxiliarReporteFiltrado.pdf'
+    return response
+
+
+
+    #BUSCAR REPORTE
+@app.route('/filtradoReportesAuxiliarBusqueda/<string:loguser>', methods=['POST'])
+def filtradoReportesAuxiliarBusqueda(loguser):
+    if request.method == 'POST':
+        buscar= request.form['buscar']
+        print(buscar)
+        cursor=mysql.connection.cursor()
+         
+        cursor.execute("""
+        SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.id = departamento.id_departamento WHERE ticket.fecha LIKE %s 
+        AND ticketaux.userAux_id = %s
+        UNION 
+        SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.id = departamento.id_departamento WHERE ticket.estatus LIKE %s
+        AND ticketaux.userAux_id = %s
+        UNION        
+        SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.id = departamento.id_departamento WHERE departamento.nombre_departamento LIKE %s
+        AND ticketaux.userAux_id = %s
+        """,('%' + buscar + '%', loguser , '%' + buscar + '%',loguser , '%' + buscar + '%', loguser))
+
+        # Obtener los resultados de la búsqueda
+        resultados = cursor.fetchall()
+
+        # Renderizar una plantilla con los resultados
+        return render_template('filtradoReportesAuxiliarBusqueda.html', ticket=resultados,  loguser=loguser, buscar=buscar)
+    else: 
+        return redirect(url_for('AdminTickets',loguser=loguser)) 
+
+
+@app.route('/reporteFiltradosAuxiliar/<string:loguser>/<string:buscar>')
+def reporteFiltradosAuxiliar(loguser, buscar):
+    print(buscar)
+    cursor=mysql.connection.cursor()
+        
+    cursor.execute("""
+        SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.id = departamento.id_departamento WHERE ticket.fecha LIKE %s 
+        AND ticketaux.userAux_id = %s
+        UNION 
+        SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.id = departamento.id_departamento WHERE ticket.estatus LIKE %s
+        AND ticketaux.userAux_id = %s
+        UNION        
+        SELECT ticket.estatus,ticket.fecha, departamento.nombre_departamento FROM ticket INNER JOIN ticketaux ON ticket.id_ticket = ticketaux.ticket_idAux INNER JOIN users ON ticket.user_idCliente = users.id INNER JOIN departamento ON users.id = departamento.id_departamento WHERE departamento.nombre_departamento LIKE %s
+        AND ticketaux.userAux_id = %s
+        """,('%' + buscar + '%', loguser , '%' + buscar + '%',loguser , '%' + buscar + '%', loguser))
+
+        # Obtener los resultados de la búsqueda
+    reporte = cursor.fetchall()
+    html = render_template('auxiliarReporteFiltradoBusqueda.html',loguser=loguser, reporte=reporte)
+    #return render_template('adminReporte.html',loguser=loguser , reporte = reporte)
+
+    # Generación del PDF
+    pdf = generar_pdf(html)
+
+    # Respuesta HTTP con el PDF generado
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=auxiliarReporteFiltradoBusqueda.pdf'
+    return response
+
+
 
 
 
@@ -974,5 +1152,3 @@ def insertClienteComentarioA(ticket,loguser):
 #Arrancamos servidor
 if __name__ == '__main__':
     app.run(port=3000,debug= True)
-
-

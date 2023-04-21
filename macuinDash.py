@@ -1051,8 +1051,11 @@ def clienteSolicitudBusqueda(loguser):
         AND ticket.user_idCliente = %s 
         UNION
         SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.estatus LIKE %s
+        AND ticket.user_idCliente = %s 
+        UNION
+        SELECT * FROM ticket JOIN users ON (ticket.user_idCliente = users.id) WHERE ticket.clasificacion LIKE %s
         AND ticket.user_idCliente = %s         
-        """,('%' + buscar + '%', loguser , '%' + buscar + '%',loguser , '%' + buscar + '%', loguser))
+        """,('%' + buscar + '%', loguser , '%' + buscar + '%',loguser , '%' + buscar + '%', loguser , '%' + buscar + '%', loguser))
 
         # Obtener los resultados de la búsqueda
         resultados = cursor.fetchall()

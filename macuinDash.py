@@ -737,6 +737,11 @@ def Seguimiento(loguser, id_ticket):
 
 @app.route('/SeguimientoEstatus/<string:id>/<string:loguser>',methods =['POST'])
 def SeguimientoEstatus(id, loguser):
+    detalles= request.form['txtdetalles'] 
+    print( detalles)
+    cursor1=mysql.connection.cursor()
+    cursor1.execute('UPDATE  ticket SET detalle= %s WHERE id_ticket = %s',(detalles, id))
+    mysql.connection.commit()
     cursor=mysql.connection.cursor()
     cursor.execute('SELECT estatus FROM ticket WHERE id_ticket = %s',(id))
     mysql.connection.commit()
@@ -1070,13 +1075,11 @@ def crearSolicitud(loguser):
 def insertarSolicitud(loguser):
     if request.method=='POST':
         print(loguser)
-        
         fecha=request.form['txtfecha']
         clasificacion=request.form['txtclasificacion']
-        detalles= request.form['txtdetalles'] 
-        print(fecha, clasificacion, detalles)
+        print(fecha, clasificacion)
         cursor=mysql.connection.cursor()
-        cursor.execute('INSERT INTO ticket (fecha,detalle, clasificacion,user_idCliente) VALUES (%s, %s,%s, %s)',(fecha, detalles, clasificacion, loguser))
+        cursor.execute('INSERT INTO ticket (fecha, clasificacion,user_idCliente) VALUES ( %s,%s, %s)',(fecha, clasificacion, loguser))
         mysql.connection.commit()
         return redirect(url_for('clienteSolicitud', loguser = loguser ))
 

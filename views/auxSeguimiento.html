@@ -33,12 +33,12 @@
                         {%for ticket in tickets%}
                         <form action="/SeguimientoEstatus/{{ticket.0}}/{{loguser}}" method="POST">
                             
+                            
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon3">Detalle</span>
-                                <textarea  rows="1" type="text" name="txtdetalle" class="form-control text-center" 
-                                id="basic-url" aria-describedby="basic-addon3" disabled >{{ticket.1}}
-                                </textarea>
+                                <span class="input-group-text" id="basic-addon3">Detalles</span>
+                                <input type="text" name="txtdetalles" class="form-control" id="basic-url" aria-describedby="basic-addon3">
                             </div>
+                            
 
                             <div class="input-group mb-3">
                                 
